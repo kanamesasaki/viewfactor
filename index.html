@@ -1,23 +1,330 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CCZTCJYRD8"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CCZTCJYRD8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-        gtag('config', 'G-CCZTCJYRD8');
-    </script>
-    <meta charset="UTF-8">
-    <title>View Factor Calculator</title>
+    gtag('config', 'G-CCZTCJYRD8');
+  </script>
+  <meta charset="UTF-8">
+  <title>View Factor Calculator</title>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <link rel="stylesheet" href="./style.css">
 </head>
+
+<header>
+  <a href="https://kanamesasaki.github.io/">Author's page</a> &#187;
+  <a href="index.html">View Factor Calculator</a>
+</header>
 <body>
+  <h1>View Factor Calculator</h1>
 
-    <script>
-        window.location.href = "./en/index.html";    
-    </script>
+  <h2>Differential surface to circular disk</h2>
 
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_ds-disk.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>r ( r &gt; 0 ) : </td>
+            <td><input type=number id="ds-disk-r" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>h ( h &gt; 0 ) : </td>
+            <td><input type=number id="ds-disk-h" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>&theta; [&deg;] ( 0 &le; &theta; &le; 180 ) : </td>
+            <td><input type=number id="ds-disk-theta" step=1.0 value=0.0 min=0.0 max=180.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="ds-disk-ana-calc">Calculate</button></td>
+            <td><output id="ds-disk-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="ds-disk-num-calc">Calculate</button></td>
+            <td><output id="ds-disk-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{gather}
+        F_{d1-2} = \frac{r^2}{r^2+h^2} \cos \theta, ~~
+        \mathrm{where}~~\theta \le \arctan \frac{h}{r} \\
+        F_{d1-2} = 0, ~~
+        \mathrm{where}~~\theta > \arctan \frac{r}{h} + \frac{\pi}{2}
+        \end{gather}
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <h2>Differential surface to rectangular surface in parallel plane</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_ds-rect.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>a ( a &gt; 0 ) : </td>
+            <td><input type=number id="ds-rect-a" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>b ( b &gt; 0 ) : </td>
+            <td><input type=number id="ds-rect-b" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>c ( c &gt; 0 ) : </td>
+            <td><input type=number id="ds-rect-c" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="ds-rect-ana-calc">Calculate</button></td>
+            <td><output id="ds-rect-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="ds-rect-num-calc">Calculate</button></td>
+            <td><output id="ds-rect-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{gather}
+        F_{d1-2} = \frac{1}{2\pi} \left( \frac{A}{\sqrt{1+A^2}} \arctan \frac{B}{\sqrt{1+A^2}}
+        + \frac{B}{\sqrt{1+B^2}} \arctan \frac{A}{\sqrt{1+B^2}} \right) \\
+        \mathrm{where}~~A = \frac{a}{c}, ~~ B = \frac{b}{c}
+        \end{gather}
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <h2>Differential surface to sphere</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_ds-sphere.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>r ( 0 &lt; r &lt; h ) : </td>
+            <td><input type=number id="ds-sphere-r" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>h ( 0 &lt; r &lt; h ) : </td>
+            <td><input type=number id="ds-sphere-h" step=0.1 value=2.0 min=0.0><br>
+          </tr>
+          <tr>
+            <td>&theta; [&deg;] ( 0 &le; &theta; &le; 180 ) : </td>
+            <td><input type=number id="ds-sphere-theta" step=1.0 value=0.0 min=0.0 max=180.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="ds-sphere-ana-calc">Calculate</button></td>
+            <td><output id="ds-sphere-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="ds-sphere-num-calc">Calculate</button></td>
+            <td><output id="ds-sphere-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{gather}
+        F_{d1-2} = \left( \frac{r}{h} \right)^2 \cos \theta, ~~
+        \mathrm{where}~~\theta \le \arccos \frac{r}{h} \\
+        F_{d1-2} = 0, ~~
+        \mathrm{where}~~\theta > \arcsin \frac{r}{h} + \frac{\pi}{2}
+        \end{gather}
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <h2>Disk to parallel coaxial disk</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_disk-disk.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>h ( h &gt; 0 ) : </td>
+            <td><input type=number id="disk-disk-h" step=0.1 value=1.0 min=0.0><br>
+          </tr>
+          <tr>
+            <td>r&#8321; ( r&#8321; &gt; 0 ) : </td>
+            <td><input type=number id="disk-disk-r1" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>r&#8322; ( r&#8322; &gt; 0 ) : </td>
+            <td><input type=number id="disk-disk-r2" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="disk-disk-ana-calc">Calculate</button></td>
+            <td><output id="disk-disk-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="disk-disk-num-calc">Calculate</button></td>
+            <td><output id="disk-disk-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{gather}
+        F_{1-2} = \frac{1}{2} \left\{ X - \sqrt{X^2 - 4\left( \frac{R_2}{R_1} \right)^2} \right\} \\
+        \mathrm{where} ~~ X = 1 + \frac{1 + R_2^2}{R_1^2}, ~~
+        R_1 = \frac{r_1}{a}, ~~ R_2 = \frac{r_2}{a}
+        \end{gather}
+      </div>
+    </div>
+  </div>
+  <hr>
+
+
+  <h2>Identical, parallel, directly opposed rectangles</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_rect-rect-p.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>a ( a &gt; 0 ) : </td>
+            <td><input type=number id="rect-rect-p-a" step=0.1 value=1.0 min=0.0><br>
+          </tr>
+          <tr>
+            <td>b ( b &gt; 0 ) : </td>
+            <td><input type=number id="rect-rect-p-b" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>c ( c &gt; 0 ) : </td>
+            <td><input type=number id="rect-rect-p-c" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="rect-rect-p-ana-calc">Calculate</button></td>
+            <td><output id="rect-rect-p-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="rect-rect-p-num-calc">Calculate</button></td>
+            <td><output id="rect-rect-p-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{align}
+        F_{1-2} = &\frac{2}{\pi XY} \left\{ \ln \left[ \frac{(1+X^2)(1+Y^2)}{1+X^2+Y^2} \right]^{1/2} + X \sqrt{1+Y^2} \arctan \frac{X}{\sqrt{1+Y^2}} \right. \\
+        &\left. + Y \sqrt{1+X^2} \arctan \frac{Y}{\sqrt{1+X^2}} - X \arctan X - Y \arctan Y \right\} \\
+        &\hspace{70pt}\mathrm{where} ~~ X = \frac{a}{c}, ~~ Y = \frac{b}{c}
+        \end{align}
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <h2>Two rectangles with one common edge and 90&deg; angle</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_rect-rect-v.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>h ( h &gt; 0 ) : </td>
+            <td><input type=number id="rect-rect-v-h" step=0.1 value=1.0 min=0.0><br>
+          </tr>
+          <tr>
+            <td>w ( w &gt; 0 ) : </td>
+            <td><input type=number id="rect-rect-v-w" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>l ( l &gt; 0 ) : </td>
+            <td><input type=number id="rect-rect-v-l" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="rect-rect-v-ana-calc">Calculate</button></td>
+            <td><output id="rect-rect-v-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="rect-rect-v-num-calc">Calculate</button></td>
+            <td><output id="rect-rect-v-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{align}
+        &F_{1-2} = \frac{1}{\pi W} \left( W \arctan \frac{1}{W} + H \arctan \frac{1}{H} - \sqrt{H^2 + W^2} \arctan \frac{1}{\sqrt{H^2 + W^2}} \right. \\
+        &\left. + \frac{1}{4} \ln \left\{ \frac{(1+W^2)(1+H^2)}{1+W^2+H^2} \left[ \frac{W^2(1+W^2+H^2)}{(1+W^2)(W^2+H^2)} \right]^{W^2} \left[ \frac{H^2(1+W^2+H^2)}{(1+H^2)(W^2+H^2)} \right]^{H^2} \right\} \right) \\
+        &\hspace{110pt}\mathrm{where} ~~ H = \frac{h}{l}, ~~ W = \frac{w}{l}
+        \end{align}
+      </div>
+    </div>
+  </div>
+
+  <div class="screen"></div>
+    <canvas id="webgl-canvas">
+      Your browser does not support the HTML5 canvas element.
+    </canvas>
+  </div>
+
+  <script type="module" src="./src/js/main.js"></script>  
 </body>
+
+<footer>
+  <a href="https://kanamesasaki.github.io/">Author's page</a> &#187;
+  <a href="index.html">View Factor Calculator</a>
+  <span style="float: right">Copyright 2022, Kaname Sasaki</span>
+</footer>
 </html>
