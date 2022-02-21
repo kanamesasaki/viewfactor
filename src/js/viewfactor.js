@@ -113,6 +113,19 @@ export function rectToRectVertical(h, w, l) {
     return vf
 }
 
+export function cylinderToCylinder(h, r1, r2) {
+    let vf
+    let R = r2/r1
+    let H = h/r1
+    if (r2 > r1 && r1 > 0.0 && h > 0.0) {
+        vf = 1/R * (1 - (H*H+R*R-1)/(4*H) - 1/Math.PI*(Math.acos((H*H-R*R+1)/(H*H+R*R-1)) - Math.sqrt((H*H+R*R+1)**2-4*R*R)/(2*H)*Math.acos((H*H-R*R+1)/(R*(H*H+R*R-1))) - (H*H-R*R+1)/(2*H)*Math.asin(1/R)))
+    }
+    else {
+        vf = Number.NaN
+    }
+    return vf
+}
+
 
 
 

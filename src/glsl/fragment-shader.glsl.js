@@ -23,8 +23,8 @@ uniform int uCase;
 // 21: rectToRectVertical
 // 30: sphereToRect
 // 31: sphereToDisk
-// 32: sphereToCylinder
 // 33: spehreToCone
+// 40: cylinderToCylinder
 
 // 100: triToTriArbitrary
 // 101: rectTorectArbitrary
@@ -367,6 +367,25 @@ Ray fromRect(Rectangle s) {
     return ray;
 }
 
+Ray fromCylinder(Cylinder s) {
+    vec3 Rx = normalize(s.p3 - s.p1);
+    vec3 Rz = normalize(s.p2 - s.p1);
+    vec3 Ry = cross(Rz, Rx);
+    float height = length(s.p2 - s.p1);
+    Ray ray;
+    float theta = 2.0*PI*floatMT();
+    ray.ro = s.p1 + height*floatMT()*Rz + s.radius*cos(theta)*Rx + s.radius*sin(theta)*Ry;
+    vec3 rotRz = cos(theta)*Rx + sin(theta)*Ry;
+    vec3 rotRx = cos(theta+PI/2.0)*Rx + sin(theta+PI/2.0)*Ry;
+    vec3 rotRy = Rz;
+    float psi = acos(1.0-2.0*floatMT())/2.0;
+    float phi = 2.0*PI*floatMT();
+    vec3 rdLocal = vec3(sin(psi)*cos(phi), sin(psi)*sin(phi), cos(psi));
+    mat3 Rmat = mat3(rotRx, rotRy, rotRz); 
+    ray.rd = -Rmat * rdLocal;
+    return ray;
+}
+
 int dsToDisk(void) {
     vec3 x = vec3(cos(uTheta),0.0,-sin(uTheta));
     vec3 y = vec3(0.0, 1.0, 0.0);
@@ -506,6 +525,26 @@ int rectToRectVertical(void) {
     return p.id;
 }
 
+int cylinderToCylinder(void) {
+    Cylinder fcylinder;
+    fcylinder.p1 = vec3(0.0, 0.0, 0.0);
+    fcylinder.p2 = vec3(0.0, 0.0, uH);
+    fcylinder.p3 = vec3(1.0, 0.0, 0.0);
+    fcylinder.id = 1;
+    fcylinder.radius = uR2;
+    Ray ray = fromCylinder(fcylinder);
+
+    Cylinder tcylinder;
+    tcylinder.p1 = vec3(0.0, 0.0, 0.0);
+    tcylinder.p2 = vec3(0.0, 0.0, uH);
+    tcylinder.p3 = vec3(1.0, 0.0, 0.0);
+    tcylinder.id = 2;
+    tcylinder.radius = uR1;
+
+    Intersection p = toCylinder(tcylinder, ray);
+    return p.id;
+}
+
 void main(void) {
     vec3 ro = vec3(0.0, 0.0, 0.0);
     uint seed = uint(gl_FragCoord.x) + uint(gl_FragCoord.y) * uint(uWidth);
@@ -558,6 +597,9 @@ void main(void) {
         // case 33:
         //     id = spehreToCone();
         //     break;
+        case 40:
+            id = cylinderToCylinder();
+            break;
         // case 100:
         //     id = triToTriArbitrary();
         //     break;

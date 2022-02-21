@@ -127,6 +127,14 @@ document.getElementById("rect-rect-v-ana-calc").onclick = function() {
   result.value = vf.rectToRectVertical(h.value, w.value, l.value)
 }
 
+document.getElementById("cylinder-cylinder-ana-calc").onclick = function() {
+  let h = document.getElementById('cylinder-cylinder-h')
+  let r1 = document.getElementById('cylinder-cylinder-r1')
+  let r2 = document.getElementById('cylinder-cylinder-r2')
+  let result = document.getElementById('cylinder-cylinder-ana-vf')
+  result.value = vf.cylinderToCylinder(h.value, r1.value, r2.value)
+}
+
 // Entry point to our application
 function init() {
   // Retrieve the canvas
@@ -431,6 +439,35 @@ document.getElementById("rect-rect-v-num-calc").onclick = function() {
   gl.uniform1f(lLoc, l.value);
   let wLoc = gl.getUniformLocation(program, 'uW');
   gl.uniform1f(wLoc, w.value);
+  let hLoc = gl.getUniformLocation(program, 'uH');
+  gl.uniform1f(hLoc, h.value);
+  draw();
+
+  let array = readInt32Array();
+  let count = arrayCount(array);
+  let vf = {}
+  for( const property in count ) {
+    vf[property] = count[property] / (gl.drawingBufferWidth*gl.drawingBufferHeight)
+  }
+  result.value = vf['2']
+}
+
+document.getElementById("cylinder-cylinder-num-calc").onclick = function() {
+  let r1 = document.getElementById('cylinder-cylinder-r1');
+  let r2 = document.getElementById('cylinder-cylinder-r2');
+  let h = document.getElementById('cylinder-cylinder-h');
+  let result = document.getElementById('cylinder-cylinder-num-vf')
+  
+  let caseLoc = gl.getUniformLocation(program, 'uCase');
+  gl.uniform1i(caseLoc, 40);
+  widthLoc = gl.getUniformLocation(program, 'uWidth');
+  gl.uniform1i(widthLoc, canvas.width);
+  heightLoc = gl.getUniformLocation(program, 'uHeight');
+  gl.uniform1i(heightLoc, canvas.height);
+  let r1Loc = gl.getUniformLocation(program, 'uR1');
+  gl.uniform1f(r1Loc, r1.value);
+  let r2Loc = gl.getUniformLocation(program, 'uR2');
+  gl.uniform1f(r2Loc, r2.value);
   let hLoc = gl.getUniformLocation(program, 'uH');
   gl.uniform1f(hLoc, h.value);
   draw();
