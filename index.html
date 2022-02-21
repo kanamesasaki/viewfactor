@@ -12,6 +12,7 @@
   </script>
   <meta charset="UTF-8">
   <title>View Factor Calculator</title>
+  <meta name="description" content="View factors for several geometrical configurations are calculated by analytical equation and Monte-Carlo ray tracing.">
   <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   <link rel="stylesheet" href="./style.css">
 </head>
@@ -76,22 +77,22 @@
 
   <div class="parent">
     <div class="child">
-      <img src=".\images\vf_ds-rect.svg" width="400">
+      <img src=".\images\vf_ds-rect-p.svg" width="400">
     </div>
     <div class="child">
       <div class="item">
         <table>
           <tr>
             <td>a ( a &gt; 0 ) : </td>
-            <td><input type=number id="ds-rect-a" step=0.1 value=1.0 min=0.0></td>
+            <td><input type=number id="ds-rect-p-a" step=0.1 value=1.0 min=0.0></td>
           </tr>
           <tr>
             <td>b ( b &gt; 0 ) : </td>
-            <td><input type=number id="ds-rect-b" step=0.1 value=1.0 min=0.0></td>
+            <td><input type=number id="ds-rect-p-b" step=0.1 value=1.0 min=0.0></td>
           </tr>
           <tr>
             <td>c ( c &gt; 0 ) : </td>
-            <td><input type=number id="ds-rect-c" step=0.1 value=1.0 min=0.0></td>
+            <td><input type=number id="ds-rect-p-c" step=0.1 value=1.0 min=0.0></td>
           </tr>
         </table>
       </div>
@@ -99,13 +100,13 @@
         <table>
           <tr>
             <td>Analytical calculation</td>
-            <td><button type="button" id="ds-rect-ana-calc">Calculate</button></td>
-            <td><output id="ds-rect-ana-vf">0.0</output></td>
+            <td><button type="button" id="ds-rect-p-ana-calc">Calculate</button></td>
+            <td><output id="ds-rect-p-ana-vf">0.0</output></td>
           </tr>
           <tr>
             <td>Monte-Carlo ray tracing</td>
-            <td><button type="button" id="ds-rect-num-calc">Calculate</button></td>
-            <td><output id="ds-rect-num-vf">0.0</output></td>
+            <td><button type="button" id="ds-rect-p-num-calc">Calculate</button></td>
+            <td><output id="ds-rect-p-num-vf">0.0</output></td>
           </tr>
         </table>
       </div>
@@ -114,6 +115,54 @@
         F_{d1-2} = \frac{1}{2\pi} \left( \frac{A}{\sqrt{1+A^2}} \arctan \frac{B}{\sqrt{1+A^2}}
         + \frac{B}{\sqrt{1+B^2}} \arctan \frac{A}{\sqrt{1+B^2}} \right) \\
         \mathrm{where}~~A = \frac{a}{c}, ~~ B = \frac{b}{c}
+        \end{gather}
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <h2>Differential surface to rectangular surface in 90&deg; angle</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_ds-rect-v.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>a ( a &gt; 0 ) : </td>
+            <td><input type=number id="ds-rect-v-a" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>b ( b &gt; 0 ) : </td>
+            <td><input type=number id="ds-rect-v-b" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>c ( c &gt; 0 ) : </td>
+            <td><input type=number id="ds-rect-v-c" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="ds-rect-v-ana-calc">Calculate</button></td>
+            <td><output id="ds-rect-v-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="ds-rect-v-num-calc">Calculate</button></td>
+            <td><output id="ds-rect-v-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{gather}
+        F_{d1-2} = \frac{1}{2\pi} \left( \arctan \frac{1}{Y}
+        - \frac{Y}{\sqrt{X^2+Y^2}} \arctan \frac{1}{\sqrt{X^2+Y^2}} \right) \\
+        \mathrm{where}~~X = \frac{a}{b}, ~~Y = \frac{c}{b}
         \end{gather}
       </div>
     </div>
@@ -163,6 +212,54 @@
         \mathrm{where}~~\theta \le \arccos \frac{r}{h} \\
         F_{d1-2} = 0, ~~
         \mathrm{where}~~\theta > \arcsin \frac{r}{h} + \frac{\pi}{2}
+        \end{gather}
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <h2>Differential surface to cylinder</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_ds-cylinder.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>r ( 0 &lt; r &lt; h ) : </td>
+            <td><input type=number id="ds-cylinder-r" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>h ( 0 &lt; r &lt; h ) : </td>
+            <td><input type=number id="ds-cylinder-h" step=0.1 value=2.0 min=0.0><br>
+          </tr>
+          <tr>
+            <td>l ( 0 &lt; l ) : </td>
+            <td><input type=number id="ds-cylinder-l" step=0.1 value=2.0 min=0.0><br>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="ds-cylinder-ana-calc">Calculate</button></td>
+            <td><output id="ds-cylinder-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="ds-cylinder-num-calc">Calculate</button></td>
+            <td><output id="ds-cylinder-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{gather}
+        F_{d1-2} = \frac{L}{\pi H} \left[ \frac{1}{L} \arctan \frac{L}{\sqrt{H^2-1}} + \frac{X-2H}{\sqrt{XY}} \arctan \sqrt{\frac{X(H-1)}{Y(H+1)}} - \arctan \sqrt{\frac{H-1}{H+1}} \right] \\
+        \mathrm{where}~~L = \frac{l}{r}, ~~ H = \frac{h}{r}, \\
+        X = (1+H)^2 + L^2, ~~ Y = (1-H)^2 + L^2
         \end{gather}
       </div>
     </div>

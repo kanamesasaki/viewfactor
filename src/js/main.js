@@ -71,12 +71,20 @@ document.getElementById("ds-disk-ana-calc").onclick = function() {
   result.value = vf.dsToDisk(r.value, h.value, theta_deg.value);
 }
 
-document.getElementById("ds-rect-ana-calc").onclick = function() {
-  let a = document.getElementById('ds-rect-a');
-  let b = document.getElementById('ds-rect-b');
-  let c = document.getElementById('ds-rect-c');
-  let result = document.getElementById('ds-rect-ana-vf')
-  result.value = vf.dsToRectangle(a.value, b.value, c.value);
+document.getElementById("ds-rect-p-ana-calc").onclick = function() {
+  let a = document.getElementById('ds-rect-p-a');
+  let b = document.getElementById('ds-rect-p-b');
+  let c = document.getElementById('ds-rect-p-c');
+  let result = document.getElementById('ds-rect-p-ana-vf')
+  result.value = vf.dsToRectangleParallel(a.value, b.value, c.value);
+}
+
+document.getElementById("ds-rect-v-ana-calc").onclick = function() {
+  let a = document.getElementById('ds-rect-v-a');
+  let b = document.getElementById('ds-rect-v-b');
+  let c = document.getElementById('ds-rect-v-c');
+  let result = document.getElementById('ds-rect-v-ana-vf')
+  result.value = vf.dsToRectangleVertical(a.value, b.value, c.value);
 }
 
 document.getElementById("ds-sphere-ana-calc").onclick = function() {
@@ -85,6 +93,14 @@ document.getElementById("ds-sphere-ana-calc").onclick = function() {
   let theta_deg = document.getElementById('ds-sphere-theta')
   let result = document.getElementById('ds-sphere-ana-vf')
   result.value = vf.dsToSphere(r.value, h.value, theta_deg.value)
+}
+
+document.getElementById("ds-cylinder-ana-calc").onclick = function() {
+  let r = document.getElementById('ds-cylinder-r')
+  let h = document.getElementById('ds-cylinder-h')
+  let l = document.getElementById('ds-cylinder-l')
+  let result = document.getElementById('ds-cylinder-ana-vf')
+  result.value = vf.dsToCylinder(r.value, h.value, l.value)
 }
 
 document.getElementById("disk-disk-ana-calc").onclick = function() {
@@ -203,7 +219,7 @@ document.getElementById("ds-disk-num-calc").onclick = function() {
   let result = document.getElementById('ds-disk-num-vf')
   
   let caseLoc = gl.getUniformLocation(program, 'uCase');
-  gl.uniform1i(caseLoc, 1);
+  gl.uniform1i(caseLoc, 0);
   widthLoc = gl.getUniformLocation(program, 'uWidth');
   gl.uniform1i(widthLoc, canvas.width);
   heightLoc = gl.getUniformLocation(program, 'uHeight');
@@ -225,14 +241,43 @@ document.getElementById("ds-disk-num-calc").onclick = function() {
   result.value = vf['1']
 }
 
-document.getElementById("ds-rect-num-calc").onclick = function() {
-  let a = document.getElementById('ds-rect-a');
-  let b = document.getElementById('ds-rect-b');
-  let c = document.getElementById('ds-rect-c');
-  let result = document.getElementById('ds-rect-num-vf')
+document.getElementById("ds-rect-p-num-calc").onclick = function() {
+  let a = document.getElementById('ds-rect-p-a');
+  let b = document.getElementById('ds-rect-p-b');
+  let c = document.getElementById('ds-rect-p-c');
+  let result = document.getElementById('ds-rect-p-num-vf')
   
   let caseLoc = gl.getUniformLocation(program, 'uCase');
-  gl.uniform1i(caseLoc, 2);
+  gl.uniform1i(caseLoc, 3);
+  widthLoc = gl.getUniformLocation(program, 'uWidth');
+  gl.uniform1i(widthLoc, canvas.width);
+  heightLoc = gl.getUniformLocation(program, 'uHeight');
+  gl.uniform1i(heightLoc, canvas.height);
+  let aLoc = gl.getUniformLocation(program, 'uA');
+  gl.uniform1f(aLoc, a.value);
+  let bLoc = gl.getUniformLocation(program, 'uB');
+  gl.uniform1f(bLoc, b.value);
+  let cLoc = gl.getUniformLocation(program, 'uC');
+  gl.uniform1f(cLoc, c.value);
+  draw();
+
+  let array = readInt32Array();
+  let count = arrayCount(array);
+  let vf = {}
+  for( const property in count ) {
+    vf[property] = count[property] / (gl.drawingBufferWidth*gl.drawingBufferHeight)
+  }
+  result.value = vf['1']
+}
+
+document.getElementById("ds-rect-v-num-calc").onclick = function() {
+  let a = document.getElementById('ds-rect-v-a');
+  let b = document.getElementById('ds-rect-v-b');
+  let c = document.getElementById('ds-rect-v-c');
+  let result = document.getElementById('ds-rect-v-num-vf')
+  
+  let caseLoc = gl.getUniformLocation(program, 'uCase');
+  gl.uniform1i(caseLoc, 4);
   widthLoc = gl.getUniformLocation(program, 'uWidth');
   gl.uniform1i(widthLoc, canvas.width);
   heightLoc = gl.getUniformLocation(program, 'uHeight');
@@ -261,7 +306,7 @@ document.getElementById("ds-sphere-num-calc").onclick = function() {
   let result = document.getElementById('ds-sphere-num-vf')
   
   let caseLoc = gl.getUniformLocation(program, 'uCase');
-  gl.uniform1i(caseLoc, 3);
+  gl.uniform1i(caseLoc, 5);
   widthLoc = gl.getUniformLocation(program, 'uWidth');
   gl.uniform1i(widthLoc, canvas.width);
   heightLoc = gl.getUniformLocation(program, 'uHeight');
@@ -283,6 +328,35 @@ document.getElementById("ds-sphere-num-calc").onclick = function() {
   result.value = vf['1']
 }
 
+document.getElementById("ds-cylinder-num-calc").onclick = function() {
+  let r = document.getElementById('ds-cylinder-r');
+  let h = document.getElementById('ds-cylinder-h');
+  let l = document.getElementById('ds-cylinder-l');
+  let result = document.getElementById('ds-cylinder-num-vf')
+  
+  let caseLoc = gl.getUniformLocation(program, 'uCase');
+  gl.uniform1i(caseLoc, 6);
+  widthLoc = gl.getUniformLocation(program, 'uWidth');
+  gl.uniform1i(widthLoc, canvas.width);
+  heightLoc = gl.getUniformLocation(program, 'uHeight');
+  gl.uniform1i(heightLoc, canvas.height);
+  let rLoc = gl.getUniformLocation(program, 'uR');
+  gl.uniform1f(rLoc, r.value);
+  let hLoc = gl.getUniformLocation(program, 'uH');
+  gl.uniform1f(hLoc, h.value);
+  let lLoc = gl.getUniformLocation(program, 'uL');
+  gl.uniform1f(lLoc, l.value);
+  draw();
+
+  let array = readInt32Array();
+  let count = arrayCount(array);
+  let vf = {}
+  for( const property in count ) {
+    vf[property] = count[property] / (gl.drawingBufferWidth*gl.drawingBufferHeight)
+  }
+  result.value = vf['1']
+}
+
 document.getElementById("disk-disk-num-calc").onclick = function() {
   let r1 = document.getElementById('disk-disk-r1');
   let r2 = document.getElementById('disk-disk-r2');
@@ -290,7 +364,7 @@ document.getElementById("disk-disk-num-calc").onclick = function() {
   let result = document.getElementById('disk-disk-num-vf')
   
   let caseLoc = gl.getUniformLocation(program, 'uCase');
-  gl.uniform1i(caseLoc, 4);
+  gl.uniform1i(caseLoc, 10);
   widthLoc = gl.getUniformLocation(program, 'uWidth');
   gl.uniform1i(widthLoc, canvas.width);
   heightLoc = gl.getUniformLocation(program, 'uHeight');
@@ -319,7 +393,7 @@ document.getElementById("rect-rect-p-num-calc").onclick = function() {
   let result = document.getElementById('rect-rect-p-num-vf')
   
   let caseLoc = gl.getUniformLocation(program, 'uCase');
-  gl.uniform1i(caseLoc, 5);
+  gl.uniform1i(caseLoc, 20);
   widthLoc = gl.getUniformLocation(program, 'uWidth');
   gl.uniform1i(widthLoc, canvas.width);
   heightLoc = gl.getUniformLocation(program, 'uHeight');
@@ -348,7 +422,7 @@ document.getElementById("rect-rect-v-num-calc").onclick = function() {
   let result = document.getElementById('rect-rect-v-num-vf')
   
   let caseLoc = gl.getUniformLocation(program, 'uCase');
-  gl.uniform1i(caseLoc, 6);
+  gl.uniform1i(caseLoc, 21);
   widthLoc = gl.getUniformLocation(program, 'uWidth');
   gl.uniform1i(widthLoc, canvas.width);
   heightLoc = gl.getUniformLocation(program, 'uHeight');

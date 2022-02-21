@@ -9,12 +9,25 @@ uniform int uHeight;
 
 // Calculation case
 uniform int uCase;
-// 1: dsToDisk
-// 2: dsToRect
-// 3: dsToSphere
-// 4: diskToDisk
-// 5: rectToRectParallel
-// 6: rectToRectVertical
+// 0: dsToDisk
+// 1: dsToDiskOffsetParallel
+// 2: dsToDiskOffsetVertical
+// 3: dsToRectParallel
+// 4: dsToRectVertical
+// 5: dsToSphere
+// 6: dsToCylinder
+
+// 10: diskToDisk
+// 11: diskToCylinder
+// 20: rectToRectParallel
+// 21: rectToRectVertical
+// 30: sphereToRect
+// 31: sphereToDisk
+// 32: sphereToCylinder
+// 33: spehreToCone
+
+// 100: triToTriArbitrary
+// 101: rectTorectArbitrary
 
 uniform float uR;
 uniform float uH;
@@ -162,6 +175,14 @@ uniform struct Sphere {
     float radius;
 };
 
+uniform struct Cylinder {
+    int id;
+    vec3 p1;
+    vec3 p2;
+    vec3 p3;
+    float radius;
+};
+
 Intersection toDisk(Disk s, Ray ray) {
     vec3 Rx = normalize(s.p3 - s.p1);
     vec3 Rz = normalize(s.p2 - s.p1);
@@ -224,6 +245,8 @@ Intersection toSphere(Sphere s, Ray ray) {
     vec3 Ro = Rinv * (ray.ro - s.p1);
     vec3 Rd = Rinv * ray.rd;
     Intersection p;
+    p.id = 0;
+    p.dist = -1.0;
     float a = dot(Rd, Rd);
     float b = dot(Rd, Ro);
     float c = dot(Ro, Ro) - s.radius*s.radius;
@@ -243,6 +266,59 @@ Intersection toSphere(Sphere s, Ray ray) {
     else if (tp > 0.0) {
         p.id = s.id;
         p.dist = tp;
+    }
+    return p;
+}
+
+Intersection toCylinder(Cylinder s, Ray ray) {
+    vec3 Rx = normalize(s.p3 - s.p1);
+    vec3 Rz = normalize(s.p2 - s.p1);
+    vec3 Ry = cross(Rz, Rx);
+    Intersection p;
+    p.id = 0;
+    p.dist = -1.0;
+    if (dot(Rz, ray.rd) == 0.0) {
+        return p;
+    }
+    mat3 Rmat = mat3(Rx, Ry, Rz);
+    mat3 Rinv = transpose(Rmat);
+    vec3 Ro = Rinv * (ray.ro - s.p1);
+    vec3 Rd = Rinv * ray.rd;
+    float a = Rd[0]*Rd[0] + Rd[1]*Rd[1];
+    float b = Ro[0]*Rd[0] + Ro[1]*Rd[1];
+    float c = Ro[0]*Ro[0] + Ro[1]*Ro[1] - s.radius*s.radius;
+    float d = b*b - a*c;
+    if (d < 0.0) {
+        return p;
+    }
+    float tp = (-b+sqrt(d)) / a;
+    float tm = (-b-sqrt(d)) / a;
+    vec3 pp = Ro + tp * Rd;
+    vec3 pm = Ro + tm * Rd;
+    float height = length(s.p2 - s.p1);
+
+    if (tm > 0.0) {
+        if (pm[2] >= 0.0 && pm[2] <= height) {
+            p.id = s.id;
+            p.dist = tm;
+        }
+        else {
+            if (pp[2] >= 0.0 && pp[2] <= height) {
+                p.id = s.id;
+                p.dist = tp;
+            }
+            else {}
+        }
+    }
+    else {
+        if (tp > 0.0) {
+            if (pp[2] >= 0.0 && pp[2] <= height) {
+                p.id = s.id;
+                p.dist = tp;
+            }
+            else {}
+        }
+        else {}
     }
     return p;
 }
@@ -308,10 +384,26 @@ int dsToDisk(void) {
     return p.id;
 }
 
-int dsToRect(void) {
+int dsToRectParallel(void) {
     vec3 x = vec3(1.0, 0.0, 0.0);
     vec3 y = vec3(0.0, 1.0, 0.0);
     vec3 z = vec3(0.0, 0.0, 1.0);
+    Ray ray = fromDs(vec3(0.0, 0.0, 0.0), x, y, z);
+
+    Rectangle rect;
+    rect.p1 = vec3(0.0, 0.0, uC);
+    rect.p2 = vec3(uA, 0.0, uC);
+    rect.p3 = vec3(0.0, uB, uC);
+    rect.id = 1;
+
+    Intersection p = toRect(rect, ray);
+    return p.id;
+}
+
+int dsToRectVertical(void) {
+    vec3 x = vec3(0.0, 1.0, 0.0);
+    vec3 y = vec3(0.0, 0.0, 1.0);
+    vec3 z = vec3(1.0, 0.0, 0.0);
     Ray ray = fromDs(vec3(0.0, 0.0, 0.0), x, y, z);
 
     Rectangle rect;
@@ -338,6 +430,23 @@ int dsToSphere(void) {
     sphere.radius = uR;
 
     Intersection p = toSphere(sphere, ray);
+    return p.id;
+}
+
+int dsToCylinder(void) {
+    vec3 x = vec3(1.0, 0.0, 0.0);
+    vec3 y = vec3(0.0, 1.0, 0.0);
+    vec3 z = vec3(0.0, 0.0, 1.0);
+    Ray ray = fromDs(vec3(0.0, 0.0, 0.0), x, y, z);
+
+    Cylinder cylinder;
+    cylinder.p1 = vec3(0.0, 0.0, uH);
+    cylinder.p2 = vec3(uL, 0.0, uH);
+    cylinder.p3 = vec3(0.0, 0.0, uH+1.0);
+    cylinder.id = 1;
+    cylinder.radius = uR;
+
+    Intersection p = toCylinder(cylinder, ray);
     return p.id;
 }
 
@@ -404,24 +513,59 @@ void main(void) {
     int id;
 
     switch (uCase) {
-        case 1:
+        case 0:
             id = dsToDisk();
             break;
-        case 2:
-            id = dsToRect();
-            break;
+        // case 1:
+        //     id = dsToDiskOffsetParallel();
+        //     break;
+        // case 2:
+        //     id = dsToDiskOffsetVertical();
+        //     break;
         case 3:
-            id = dsToSphere();
+            id = dsToRectParallel();
             break;
         case 4:
-            id = diskToDisk();
+            id = dsToRectVertical();
             break;
         case 5:
-            id = rectToRectParallel();
+            id = dsToSphere();
             break;
         case 6:
+            id = dsToCylinder();
+            break;
+        case 10:
+            id = diskToDisk();
+            break;
+        // case 11:
+        //     id = diskToCylinder();
+        //     break;
+        case 20:
+            id = rectToRectParallel();
+            break;
+        case 21:
             id = rectToRectVertical();
             break;
+        // case 30:
+        //     id = sphereToRect();
+        //     break;
+        // case 31:
+        //     id = sphereToDisk();
+        //     break;
+        // case 32:
+        //     id = sphereToCylinder();
+        //     break;
+        // case 33:
+        //     id = spehreToCone();
+        //     break;
+        // case 100:
+        //     id = triToTriArbitrary();
+        //     break;
+        // case 101:
+        //     id = rectTorectArbitrary();
+        //     break;
+        default:
+            id = 0xFFFF;
     }
     
     fragColor = intToVec4(id);

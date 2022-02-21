@@ -13,12 +13,25 @@ export function dsToDisk(r, h, theta_deg) {
     return vf
 }
 
-export function dsToRectangle(a, b, c) {
+export function dsToRectangleParallel(a, b, c) {
     let vf
     let A = a/c
     let B = b/c
     if (a >= 0 && b >= 0 && c > 0) {
         vf = 1.0/(2.0*Math.PI) * (A/Math.sqrt(1.0+A*A)*Math.atan(B/Math.sqrt(1.0+A*A))+B/Math.sqrt(1.0+B*B)*Math.atan(A/Math.sqrt(1.0+B*B)))
+    }
+    else {
+        vf = Number.NaN
+    }
+    return vf
+}
+
+export function dsToRectangleVertical(a, b, c) {
+    let vf
+    let X = a/b
+    let Y = c/b
+    if (a >= 0 && b >= 0 && c > 0) {
+        vf = 1.0/(2.0*Math.PI) * (Math.atan(1/Y)-Y/Math.sqrt(X*X+Y*Y)*Math.atan(1/Math.sqrt(X*X+Y*Y)))
     }
     else {
         vf = Number.NaN
@@ -34,6 +47,21 @@ export function dsToSphere(r, h, theta_deg) {
     }
     else if ((theta >= Math.asin(r/h) + Math.PI/2) && h > r) {
         vf = 0.0
+    }
+    else {
+        vf = Number.NaN
+    }
+    return vf
+}
+
+export function dsToCylinder(r, h, l) {
+    let vf
+    let L = l/r
+    let H = h/r
+    let X = (1+H)**2 + L*L
+    let Y = (1-H)**2 + L*L
+    if (h > r && r > 0.0 && l >= 0.0) {
+        vf = L/(Math.PI*H) * (1/L * Math.atan(L/Math.sqrt(H*H-1)) + (X-2*H)/Math.sqrt(X*Y) * Math.atan(Math.sqrt((X*(H-1))/(Y*(H+1)))) - Math.atan(Math.sqrt((H-1)/(H+1))))
     }
     else {
         vf = Number.NaN
