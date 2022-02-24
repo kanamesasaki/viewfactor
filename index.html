@@ -15,6 +15,7 @@
   <meta name="description" content="View factors for several geometrical configurations are calculated by analytical equation and Monte-Carlo ray tracing.">
   <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   <link rel="stylesheet" href="./style.css">
+  <link rel="icon" type="image/png" href="./images/icon.png">
 </head>
 
 <header>
@@ -363,6 +364,7 @@
   </div>
   <hr>
 
+  <!-- 21: rectToRectVertical -->
   <h2>Two rectangles with one common edge and 90&deg; angle</h2>
 
   <div class="parent">
@@ -411,6 +413,54 @@
   </div>
   <hr>
 
+  <!-- 30: sphereToRect -->
+  <h2>Unit sphere to rectangle</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_sphere-rect.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>h ( h &gt; 1 ) : </td>
+            <td><input type=number id="sphere-rect-h" step=0.1 value=2.0 min=0.0><br>
+          </tr>
+          <tr>
+            <td>l&#8321; ( l&#8321; &gt; 0 ) : </td>
+            <td><input type=number id="sphere-rect-l1" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>l&#8322; ( l&#8322; &gt; 0 ) : </td>
+            <td><input type=number id="sphere-rect-l2" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="sphere-rect-ana-calc">Calculate</button></td>
+            <td><output id="sphere-rect-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="sphere-rect-num-calc">Calculate</button></td>
+            <td><output id="sphere-rect-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{align}
+        F_{1-2} &= \frac{1}{4\pi} \arctan \sqrt{\frac{1}{H_1^2+H_2^2+H_1^2H_2^2}} \\
+        &\mathrm{where} ~~ H_1 = \frac{h}{l_1}, ~~H_2 = \frac{h}{l_2}
+        \end{align}
+      </div>
+    </div>
+  </div>
+  <hr>
+
   <h2>Interior of outer cylinder to exterior of coaxial inner cylinder</h2>
 
   <div class="parent">
@@ -450,9 +500,9 @@
       </div>
       <div class="item">
         \begin{align}
-        F_{2-1} = &\frac{1}{R} \left( 1 - \frac{H^2+R^2-1}{4H} - \frac{1}{\pi} \left\{ \arccos \frac{H^2-R^2+1}{H^2+R^2-1} \right. \right. \\
+        &F_{2-1} = \frac{1}{R} \left( 1 - \frac{H^2+R^2-1}{4H} - \frac{1}{\pi} \left\{ \arccos \frac{H^2-R^2+1}{H^2+R^2-1} \right. \right. \\
         &\left. \left. - \frac{\sqrt{(H^2+R^2+1)^2-4R^2}}{2H} \arccos \frac{H^2-R^2+1}{R(H^2+R^2-1)} - \frac{H^2-R^2+1}{2H} \arcsin \frac{1}{R} \right\} \right) \\
-        &\mathrm{where} ~~ R_1 = \frac{r_1}{h}, ~~R_2 = \frac{r_2}{h}, ~~A = R_2 + R_1, ~~B = R_2 - R_1
+        &\hspace{50pt} \mathrm{where} ~~ R_1 = \frac{r_1}{h}, ~~R_2 = \frac{r_2}{h}, ~~A = R_2 + R_1, ~~B = R_2 - R_1
         \end{align}
       </div>
     </div>

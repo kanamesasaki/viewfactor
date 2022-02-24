@@ -38,6 +38,8 @@ uniform float uC;
 uniform float uR1;
 uniform float uR2;
 uniform float uL;
+uniform float uL1;
+uniform float uL2;
 uniform float uW;
 
 const float PI = 3.141592653589793238462643383;
@@ -386,6 +388,26 @@ Ray fromCylinder(Cylinder s) {
     return ray;
 }
 
+Ray fromSphere(Sphere s) {
+    vec3 Rx = normalize(s.p3 - s.p1);
+    vec3 Rz = normalize(s.p2 - s.p1);
+    vec3 Ry = cross(Rz, Rx);
+    float theta = acos(1.0-2.0*floatMT());
+    float thetav = theta + PI/2.0;
+    float omega = 2.0*PI*floatMT();
+    Ray ray;
+    vec3 rotRz = vec3(cos(theta)*Rz + sin(theta)*cos(omega)*Rx + sin(theta)*sin(omega)*Ry);
+    vec3 rotRx = vec3(cos(thetav)*Rz + sin(thetav)*cos(omega)*Rx + sin(thetav)*sin(omega)*Ry);
+    vec3 rotRy = cross(rotRz, rotRx);
+    ray.ro = s.p1 + s.radius*rotRz;
+    float psi = acos(1.0-2.0*floatMT())/2.0;
+    float phi = 2.0*PI*floatMT();
+    vec3 rdLocal = vec3(sin(psi)*cos(phi), sin(psi)*sin(phi), cos(psi));
+    mat3 Rmat = mat3(rotRx, rotRy, rotRz);
+    ray.rd = Rmat * rdLocal;
+    return ray;
+}
+
 int dsToDisk(void) {
     vec3 x = vec3(cos(uTheta),0.0,-sin(uTheta));
     vec3 y = vec3(0.0, 1.0, 0.0);
@@ -525,6 +547,25 @@ int rectToRectVertical(void) {
     return p.id;
 }
 
+int sphereToRect(void) {
+    Sphere sphere;
+    sphere.p1 = vec3(0.0, 0.0, uH);
+    sphere.p2 = vec3(0.0, 0.0, uH+1.0);
+    sphere.p3 = vec3(1.0, 0.0, uH);
+    sphere.id = 1;
+    sphere.radius = 1.0;
+    Ray ray = fromSphere(sphere);
+
+    Rectangle rect;
+    rect.p1 = vec3(0.0, 0.0, 0.0);
+    rect.p2 = vec3(uL1, 0.0, 0.0);
+    rect.p3 = vec3(0.0, uL2, 0.0);
+    rect.id = 2;
+
+    Intersection p = toRect(rect, ray);
+    return p.id;
+}
+
 int cylinderToCylinder(void) {
     Cylinder fcylinder;
     fcylinder.p1 = vec3(0.0, 0.0, 0.0);
@@ -585,9 +626,9 @@ void main(void) {
         case 21:
             id = rectToRectVertical();
             break;
-        // case 30:
-        //     id = sphereToRect();
-        //     break;
+        case 30:
+            id = sphereToRect();
+            break;
         // case 31:
         //     id = sphereToDisk();
         //     break;
