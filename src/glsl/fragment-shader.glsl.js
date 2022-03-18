@@ -6,6 +6,7 @@ uniform vec2 uInverseTextureSize;
 out vec4 fragColor;
 uniform int uWidth;
 uniform int uHeight;
+uniform int uInitFlag;
 
 // Calculation case
 uniform int uCase;
@@ -43,82 +44,120 @@ uniform float uL2;
 uniform float uW;
 
 const float PI = 3.141592653589793238462643383;
-const uint MATRIX_A = 0x9908B0DFu;
-const uint UPPER_MASK = 0x80000000u;
-const uint LOWER_MASK = 0x7FFFFFFFu;
-const uint FULL_MASK = 0xFFFFFFFFu;
-const int N = 624;
-const int M = 397;
-const int KEY_LENGTH = 4;
-uint mt[N];
-int mti = N+1;
 
-void initSeedMT(uint s) {
-    mt[0]= s;
-    for (int i=1; i<N; i++) {
-         mt[i] = (1812433253u * (mt[i-1]^(mt[i-1]>>30)) + uint(i));
+// MRG32k3a parameters
+uint[3] x1 = uint[3](0u, 0u, 1234567u);
+uint[3] x2 = uint[3](0u, 0u, 1234567u);
+const uint[9] a1 = uint[9](0u, 1u, 0u, 0u, 0u, 1u, 4294156359u, 1403580u, 0u);
+const uint[9] a2 = uint[9](0u, 1u, 0u, 0u, 0u, 1u, 4293573854u, 0u, 527612u);
+const uint m1 = 4294967087u;
+const uint m2 = 4294944443u;
+const uint a11 = 1403580u;
+const uint a10 = 810728u;
+const uint a22 = 527612u;
+const uint a20 = 1370589u;
+
+uint addModM(uint a, uint b, uint m) {
+    uint amodm = a % m;
+    uint bmodm = b % m;
+    uint blim = m - amodm;
+    if (bmodm <= blim) {
+        return amodm + bmodm; 
+    }
+    else {
+        return amodm - (m - bmodm);
     }
 }
 
-void initArrayMT(uint initKey[KEY_LENGTH]) {
-    int i, j, k;
-    initSeedMT(19650218u);
-    i = 1;
-    j = 0;
-    k = (N>KEY_LENGTH ? N : KEY_LENGTH);
-    for (; k>0; k--) {
-        mt[i] = (mt[i] ^ ((mt[i-1] ^ (mt[i-1] >> 30)) * 1664525u)) + initKey[j] + uint(j);
-        i++;
-        j++;
-        if (i>=N) {
-            mt[0] = mt[N-1];
-            i = 1;
-        }
-        if (j>=KEY_LENGTH) {
-            j = 0;
-        }
+uint diffModM(uint a, uint b, uint m) {
+    uint amodm = a % m;
+    uint bmodm = b % m;
+    if (amodm >= bmodm) {
+        return amodm - bmodm;
     }
-    for (k=N-1; k>0; k--) {
-        mt[i] = (mt[i] ^ ((mt[i-1] ^ (mt[i-1] >> 30)) * 1566083941u)) - uint(i);
-        i++;
-        if (i>=N) {
-            mt[0] = mt[N-1];
-            i = 1;
-        }
+    else {
+        return amodm + (m - bmodm);
     }
-    mt[0] = 0x80000000u;
 }
 
-uint uintMT(void) {
-    uint y;
-    uint mag01[2];
-    mag01[0] = 0x0u;
-    mag01[1] = MATRIX_A;
-    if (mti >= N) {
-        int kk;
-        for (kk=0;kk<N-M;kk++) {
-            y = (mt[kk]&UPPER_MASK)|(mt[kk+1]&LOWER_MASK);
-            mt[kk] = mt[kk+M] ^ (y >> 1u) ^ mag01[int(y&0x1u)];
+uint multModM(uint a, uint b, uint m) {
+    uint amodm = a % m;
+    uint bmodm = b % m;
+    uint res = 0u;
+    while (bmodm > 0u) {
+        if ((bmodm&0x1u) == 0x1u) {
+            res = addModM(res, amodm, m);
         }
-        for (;kk<N-1;kk++) {
-            y = (mt[kk]&UPPER_MASK)|(mt[kk+1]&LOWER_MASK);
-            mt[kk] = mt[kk+(M-N)] ^ (y >> 1u) ^ mag01[int(y&0x1u)];
-        }
-        y = (mt[N-1]&UPPER_MASK)|(mt[0]&LOWER_MASK);
-        mt[N-1] = mt[M-1] ^ (y >> 1u) ^ mag01[int(y&0x1u)];
-        mti = 0;
+        bmodm = bmodm >> 1;
+        amodm = addModM(amodm, amodm, m);
     }
-    y = mt[mti++];
-    // Tempering
-    y ^= (y >> 11);
-    y ^= (y << 7) & 0x9D2C5680u;
-    y ^= (y << 15) & 0xEFC60000u;
-    y ^= (y >> 18);
-    return y;
+    return res;
 }
 
-float floatMT(void) {
-    return float(uintMT())*(1.0/4294967295.0);
+// calculate c = a*b mod m
+void matMultModM(uint[9] a, uint[9] b, uint m, out uint[9] c) {
+    c[0] = addModM(addModM(multModM(a[0],b[0],m), multModM(a[1],b[3],m), m), multModM(a[2],b[6],m), m);
+    c[1] = addModM(addModM(multModM(a[0],b[1],m), multModM(a[1],b[4],m), m), multModM(a[2],b[7],m), m);
+    c[2] = addModM(addModM(multModM(a[0],b[2],m), multModM(a[1],b[5],m), m), multModM(a[2],b[8],m), m);
+    c[3] = addModM(addModM(multModM(a[3],b[0],m), multModM(a[4],b[3],m), m), multModM(a[5],b[6],m), m);
+    c[4] = addModM(addModM(multModM(a[3],b[1],m), multModM(a[4],b[4],m), m), multModM(a[5],b[7],m), m);
+    c[5] = addModM(addModM(multModM(a[3],b[2],m), multModM(a[4],b[5],m), m), multModM(a[5],b[8],m), m);
+    c[6] = addModM(addModM(multModM(a[6],b[0],m), multModM(a[7],b[3],m), m), multModM(a[8],b[6],m), m);
+    c[7] = addModM(addModM(multModM(a[6],b[1],m), multModM(a[7],b[4],m), m), multModM(a[8],b[7],m), m);
+    c[8] = addModM(addModM(multModM(a[6],b[2],m), multModM(a[7],b[5],m), m), multModM(a[8],b[8],m), m);
+}
+
+// calculate w = a*v mod m
+void matVecMultModM(uint[9] a, uint[3] v, uint m, out uint[3] w) {
+    w[0] = addModM(addModM(multModM(a[0],v[0],m), multModM(a[1],v[1],m), m), multModM(a[2],v[2],m), m);
+    w[1] = addModM(addModM(multModM(a[3],v[0],m), multModM(a[4],v[1],m), m), multModM(a[5],v[2],m), m);
+    w[2] = addModM(addModM(multModM(a[6],v[0],m), multModM(a[7],v[1],m), m), multModM(a[8],v[2],m), m);
+}
+
+// calculate c = a+b mod m
+void matVecMultModM(uint[3] a, uint[3] b, uint m, out uint[9] c) {
+    c[0] = addModM(a[0], b[0], m);
+    c[1] = addModM(a[1], b[1], m);
+    c[2] = addModM(a[2], b[2], m);
+}
+
+// calculate b = a**n mod m
+void matPowModM(uint[9] a, uint n, uint m, out uint[9] b) {
+    uint[9] apow = a;
+    b = uint[9](1u, 0u, 0u, 0u, 1u, 0u, 0u, 0u, 1u);
+    while (n > 0u) {
+        if ((n&0x1u) == 0x1u) {
+            matMultModM(apow, b, m, b);
+        }
+        n = n >> 1;
+        matMultModM(apow, apow, m, apow);
+    }
+}
+
+uint stepMRG32k3a(void) {
+    uint x1i = diffModM(multModM(x1[1], a11, m1), multModM(x1[0], a10, m1), m1);
+    uint x2i = diffModM(multModM(x2[2], a22, m2), multModM(x2[0], a20, m2), m2);
+    x1[0] = x1[1];
+    x1[1] = x1[2];
+    x1[2] = x1i;
+    x2[0] = x2[1];
+    x2[1] = x2[2];
+    x2[2] = x2i;
+    return diffModM(x1i, x2i, m1);
+}
+
+float floatMRG32k3a(void) {
+    return float(stepMRG32k3a())*(1.0/4294967086.0);
+}
+
+uint skipMRG32k3a(uint n) {
+    uint[9] a1pow;
+    uint[9] a2pow;
+    matPowModM(a1, n, m1, a1pow);
+    matPowModM(a2, n, m2, a2pow);
+    matVecMultModM(a1pow, x1, m1, x1);
+    matVecMultModM(a2pow, x2, m2, x2);
+    return diffModM(x1[0], x2[0], m1);
 }
 
 vec4 intToVec4(int num) {
@@ -163,6 +202,13 @@ uniform struct Disk {
 };
 
 uniform struct Rectangle {
+    int id;
+    vec3 p1;
+    vec3 p2;
+    vec3 p3;
+};
+
+uniform struct Triangle {
     int id;
     vec3 p1;
     vec3 p2;
@@ -326,8 +372,8 @@ Intersection toCylinder(Cylinder s, Ray ray) {
 }
 
 Ray fromDs(vec3 ro, vec3 x, vec3 y, vec3 z) {
-    float psi = acos(1.0-2.0*floatMT())/2.0;
-    float phi = 2.0*PI*floatMT();
+    float psi = acos(1.0-2.0*floatMRG32k3a())/2.0;
+    float phi = 2.0*PI*floatMRG32k3a();
     vec3 rdLocal = vec3(sin(psi)*cos(phi), sin(psi)*sin(phi), cos(psi));
     mat3 Rmat = mat3(x, y, z); 
     vec3 rd = Rmat * rdLocal;
@@ -338,15 +384,15 @@ Ray fromDs(vec3 ro, vec3 x, vec3 y, vec3 z) {
 }
 
 Ray fromDisk(Disk s) {
-    float r = s.radius*sqrt(floatMT());
-    float theta = 2.0*PI*floatMT();
+    float r = s.radius*sqrt(floatMRG32k3a());
+    float theta = 2.0*PI*floatMRG32k3a();
     vec3 Rx = normalize(s.p3 - s.p1);
     vec3 Rz = normalize(s.p2 - s.p1);
     vec3 Ry = cross(Rz, Rx);
     Ray ray;
     ray.ro = s.p1 + r*cos(theta)*Rx + r*sin(theta)*Ry;
-    float psi = acos(1.0-2.0*floatMT())/2.0;
-    float phi = 2.0*PI*floatMT();
+    float psi = acos(1.0-2.0*floatMRG32k3a())/2.0;
+    float phi = 2.0*PI*floatMRG32k3a();
     vec3 rdLocal = vec3(sin(psi)*cos(phi), sin(psi)*sin(phi), cos(psi));
     mat3 Rmat = mat3(Rx, Ry, Rz); 
     ray.rd = Rmat * rdLocal;
@@ -360,9 +406,9 @@ Ray fromRect(Rectangle s) {
     vec3 Ry = normalize(yvec);
     vec3 Rz = cross(Rx, Ry);
     Ray ray;
-    ray.ro = s.p1 + floatMT()*xvec + floatMT()*yvec;
-    float psi = acos(1.0-2.0*floatMT())/2.0;
-    float phi = 2.0*PI*floatMT();
+    ray.ro = s.p1 + floatMRG32k3a()*xvec + floatMRG32k3a()*yvec;
+    float psi = acos(1.0-2.0*floatMRG32k3a())/2.0;
+    float phi = 2.0*PI*floatMRG32k3a();
     vec3 rdLocal = vec3(sin(psi)*cos(phi), sin(psi)*sin(phi), cos(psi));
     mat3 Rmat = mat3(Rx, Ry, Rz); 
     ray.rd = Rmat * rdLocal;
@@ -375,13 +421,13 @@ Ray fromCylinder(Cylinder s) {
     vec3 Ry = cross(Rz, Rx);
     float height = length(s.p2 - s.p1);
     Ray ray;
-    float theta = 2.0*PI*floatMT();
-    ray.ro = s.p1 + height*floatMT()*Rz + s.radius*cos(theta)*Rx + s.radius*sin(theta)*Ry;
+    float theta = 2.0*PI*floatMRG32k3a();
+    ray.ro = s.p1 + height*floatMRG32k3a()*Rz + s.radius*cos(theta)*Rx + s.radius*sin(theta)*Ry;
     vec3 rotRz = cos(theta)*Rx + sin(theta)*Ry;
     vec3 rotRx = cos(theta+PI/2.0)*Rx + sin(theta+PI/2.0)*Ry;
     vec3 rotRy = Rz;
-    float psi = acos(1.0-2.0*floatMT())/2.0;
-    float phi = 2.0*PI*floatMT();
+    float psi = acos(1.0-2.0*floatMRG32k3a())/2.0;
+    float phi = 2.0*PI*floatMRG32k3a();
     vec3 rdLocal = vec3(sin(psi)*cos(phi), sin(psi)*sin(phi), cos(psi));
     mat3 Rmat = mat3(rotRx, rotRy, rotRz); 
     ray.rd = -Rmat * rdLocal;
@@ -392,16 +438,16 @@ Ray fromSphere(Sphere s) {
     vec3 Rx = normalize(s.p3 - s.p1);
     vec3 Rz = normalize(s.p2 - s.p1);
     vec3 Ry = cross(Rz, Rx);
-    float theta = acos(1.0-2.0*floatMT());
+    float theta = acos(1.0-2.0*floatMRG32k3a());
     float thetav = theta + PI/2.0;
-    float omega = 2.0*PI*floatMT();
+    float omega = 2.0*PI*floatMRG32k3a();
     Ray ray;
     vec3 rotRz = vec3(cos(theta)*Rz + sin(theta)*cos(omega)*Rx + sin(theta)*sin(omega)*Ry);
     vec3 rotRx = vec3(cos(thetav)*Rz + sin(thetav)*cos(omega)*Rx + sin(thetav)*sin(omega)*Ry);
     vec3 rotRy = cross(rotRz, rotRx);
     ray.ro = s.p1 + s.radius*rotRz;
-    float psi = acos(1.0-2.0*floatMT())/2.0;
-    float phi = 2.0*PI*floatMT();
+    float psi = acos(1.0-2.0*floatMRG32k3a())/2.0;
+    float phi = 2.0*PI*floatMRG32k3a();
     vec3 rdLocal = vec3(sin(psi)*cos(phi), sin(psi)*sin(phi), cos(psi));
     mat3 Rmat = mat3(rotRx, rotRy, rotRz);
     ray.rd = Rmat * rdLocal;
@@ -586,10 +632,11 @@ int cylinderToCylinder(void) {
     return p.id;
 }
 
+
 void main(void) {
-    vec3 ro = vec3(0.0, 0.0, 0.0);
     uint seed = uint(gl_FragCoord.x) + uint(gl_FragCoord.y) * uint(uWidth);
-    initSeedMT(seed);
+    uint skip = seed * 100u;
+    skipMRG32k3a(skip);
     int id;
 
     switch (uCase) {
@@ -648,7 +695,7 @@ void main(void) {
         //     id = rectTorectArbitrary();
         //     break;
         default:
-            id = 0xFFFF;
+            id = 0x0;
     }
     
     fragColor = intToVec4(id);
