@@ -612,6 +612,26 @@ int sphereToRect(void) {
     return p.id;
 }
 
+int sphereToDisk(void) {
+    Sphere sphere;
+    sphere.p1 = vec3(0.0, 0.0, uH);
+    sphere.p2 = vec3(0.0, 0.0, uH+1.0);
+    sphere.p3 = vec3(1.0, 0.0, uH);
+    sphere.id = 1;
+    sphere.radius = 1.0;
+    Ray ray = fromSphere(sphere);
+
+    Disk disk;
+    disk.p1 = vec3(0.0, 0.0, 0.0);
+    disk.p2 = vec3(0.0, 0.0, 1.0);
+    disk.p3 = vec3(1.0, 0.0, 0.0);
+    disk.id = 2;
+    disk.radius = uR;
+
+    Intersection p = toDisk(disk, ray);
+    return p.id;
+}
+
 int cylinderToCylinder(void) {
     Cylinder fcylinder;
     fcylinder.p1 = vec3(0.0, 0.0, 0.0);
@@ -696,9 +716,9 @@ void main(void) {
         case 30:
             id = sphereToRect();
             break;
-        // case 31:
-        //     id = sphereToDisk();
-        //     break;
+        case 31:
+            id = sphereToDisk();
+            break;
         // case 32:
         //     id = sphereToCylinder();
         //     break;

@@ -109,6 +109,13 @@ document.getElementById("sphere-rect-ana-calc").onclick = function() {
   result.value = vf.sphereToRect(h.value, l1.value, l2.value)
 }
 
+document.getElementById("sphere-disk-ana-calc").onclick = function() {
+  let h = document.getElementById('sphere-disk-h')
+  let r = document.getElementById('sphere-disk-r')
+  let result = document.getElementById('sphere-disk-ana-vf')
+  result.value = vf.sphereToDisk(h.value, r.value)
+}
+
 document.getElementById("cylinder-cylinder-ana-calc").onclick = function() {
   let h = document.getElementById('cylinder-cylinder-h')
   let r1 = document.getElementById('cylinder-cylinder-r1')
@@ -436,6 +443,32 @@ document.getElementById("sphere-rect-num-calc").onclick = function() {
   gl.uniform1f(l1Loc, l1.value);
   let l2Loc = gl.getUniformLocation(program, 'uL2');
   gl.uniform1f(l2Loc, l2.value);
+  let hLoc = gl.getUniformLocation(program, 'uH');
+  gl.uniform1f(hLoc, h.value);
+  draw();
+
+  let array = readInt32Array();
+  let count = arrayCount(array);
+  let vf = {}
+  for( const property in count ) {
+    vf[property] = count[property] / (gl.drawingBufferWidth*gl.drawingBufferHeight)
+  }
+  result.value = vf['2']
+}
+
+document.getElementById("sphere-disk-num-calc").onclick = function() {
+  let r = document.getElementById('sphere-disk-r');
+  let h = document.getElementById('sphere-disk-h');
+  let result = document.getElementById('sphere-disk-num-vf')
+  
+  let caseLoc = gl.getUniformLocation(program, 'uCase');
+  gl.uniform1i(caseLoc, 31);
+  widthLoc = gl.getUniformLocation(program, 'uWidth');
+  gl.uniform1i(widthLoc, canvas.width);
+  heightLoc = gl.getUniformLocation(program, 'uHeight');
+  gl.uniform1i(heightLoc, canvas.height);
+  let rLoc = gl.getUniformLocation(program, 'uR');
+  gl.uniform1f(rLoc, r.value);
   let hLoc = gl.getUniformLocation(program, 'uH');
   gl.uniform1f(hLoc, h.value);
   draw();

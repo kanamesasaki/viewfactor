@@ -126,6 +126,18 @@ export function sphereToRect(h, l1, l2) {
     return vf
 }
 
+export function sphereToDisk(h, r) {
+    let vf
+    if (h > 1.0 && r > 0.0) {
+        let R = r/h
+        vf = 1.0/2.0 * (1.0 - 1.0/Math.sqrt(1.0 + R*R))
+    }
+    else {
+        vf = Number.NaN
+    }
+    return vf
+}
+
 export function cylinderToCylinder(h, r1, r2) {
     let vf
     let R = r2/r1

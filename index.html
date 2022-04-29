@@ -503,6 +503,50 @@
   </div>
   <hr>
 
+  <!-- 31: sphereToDisk -->
+  <h2>Unit sphere to coaxial disk</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_sphere-disk.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>h ( h &gt; 1 ) : </td>
+            <td><input type=number id="sphere-disk-h" step=0.1 value=2.0 min=0.0><br>
+          </tr>
+          <tr>
+            <td>r ( r &gt; 0 ) : </td>
+            <td><input type=number id="sphere-disk-r" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="sphere-disk-ana-calc">Calculate</button></td>
+            <td><output id="sphere-disk-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="sphere-disk-num-calc">Calculate</button></td>
+            <td><output id="sphere-disk-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{align}
+        F_{1-2} &= \frac{1}{2} \left[ 1 - \frac{1}{\sqrt{1+R^2}} \right] \\
+        &\mathrm{where} ~~ R = \frac{r}{h}
+        \end{align}
+      </div>
+    </div>
+  </div>
+  <hr>
+
   <h2>Interior of outer cylinder to exterior of coaxial inner cylinder</h2>
 
   <div class="parent">
