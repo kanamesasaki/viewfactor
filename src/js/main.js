@@ -117,6 +117,13 @@ document.getElementById("cylinder-cylinder-ana-calc").onclick = function() {
   result.value = vf.cylinderToCylinder(h.value, r1.value, r2.value)
 }
 
+document.getElementById("disk-cylinder-ana-calc").onclick = function() {
+  let h = document.getElementById('disk-cylinder-h')
+  let r = document.getElementById('disk-cylinder-r')
+  let result = document.getElementById('disk-cylinder-ana-vf')
+  result.value = vf.diskToCylinder(h.value, r.value)
+}
+
 // Entry point to our application
 function init() {
   canvas.width = 1000; // window.innerWidth;
@@ -458,6 +465,32 @@ document.getElementById("cylinder-cylinder-num-calc").onclick = function() {
   gl.uniform1f(r1Loc, r1.value);
   let r2Loc = gl.getUniformLocation(program, 'uR2');
   gl.uniform1f(r2Loc, r2.value);
+  let hLoc = gl.getUniformLocation(program, 'uH');
+  gl.uniform1f(hLoc, h.value);
+  draw();
+
+  let array = readInt32Array();
+  let count = arrayCount(array);
+  let vf = {}
+  for( const property in count ) {
+    vf[property] = count[property] / (gl.drawingBufferWidth*gl.drawingBufferHeight)
+  }
+  result.value = vf['2']
+}
+
+document.getElementById("disk-cylinder-num-calc").onclick = function() {
+  let r = document.getElementById('disk-cylinder-r');
+  let h = document.getElementById('disk-cylinder-h');
+  let result = document.getElementById('disk-cylinder-num-vf')
+  
+  let caseLoc = gl.getUniformLocation(program, 'uCase');
+  gl.uniform1i(caseLoc, 11);
+  widthLoc = gl.getUniformLocation(program, 'uWidth');
+  gl.uniform1i(widthLoc, canvas.width);
+  heightLoc = gl.getUniformLocation(program, 'uHeight');
+  gl.uniform1i(heightLoc, canvas.height);
+  let rLoc = gl.getUniformLocation(program, 'uR');
+  gl.uniform1f(rLoc, r.value);
   let hLoc = gl.getUniformLocation(program, 'uH');
   gl.uniform1f(hLoc, h.value);
   draw();

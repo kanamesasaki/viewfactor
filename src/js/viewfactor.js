@@ -139,7 +139,14 @@ export function cylinderToCylinder(h, r1, r2) {
     return vf
 }
 
-
-
-
-
+export function diskToCylinder(h, r) {
+    let vf
+    let H = h/(2*r)
+    if (r > 0.0 && h > 0.0) {
+        vf = 2.0*H * (Math.sqrt(1+H*H) - H)
+    }
+    else {
+        vf = Number.NaN
+    }
+    return vf
+}

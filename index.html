@@ -315,6 +315,48 @@
   </div>
   <hr>
 
+  <h2>Base disk to inside surface of cylincer</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_disk-cylinder.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>h ( h &gt; 0 ) : </td>
+            <td><input type=number id="disk-cylinder-h" step=0.1 value=1.0 min=0.0><br>
+          </tr>
+          <tr>
+            <td>r&#8321; ( r &gt; 0 ) : </td>
+            <td><input type=number id="disk-cylinder-r" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="disk-cylinder-ana-calc">Calculate</button></td>
+            <td><output id="disk-cylinder-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="disk-cylinder-num-calc">Calculate</button></td>
+            <td><output id="disk-cylinder-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{gather}
+        F_{1-2} = 2H \left[ \sqrt{1+H^2} - H \right] \\
+        \mathrm{where} ~~ H = \frac{h}{2r}
+        \end{gather}
+      </div>
+    </div>
+  </div>
+  <hr>
 
   <h2>Identical, parallel, directly opposed rectangles</h2>
 

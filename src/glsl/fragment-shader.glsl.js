@@ -632,6 +632,26 @@ int cylinderToCylinder(void) {
     return p.id;
 }
 
+int diskToCylinder(void) {
+    Disk fd;
+    fd.p1 = vec3(0.0, 0.0, 0.0);
+    fd.p2 = vec3(0.0, 0.0, 1.0);
+    fd.p3 = vec3(1.0, 0.0, 0.0);
+    fd.id = 1;
+    fd.radius = uR;
+    Ray ray = fromDisk(fd);
+
+    Cylinder tcylinder;
+    tcylinder.p1 = vec3(0.0, 0.0, 0.0);
+    tcylinder.p2 = vec3(0.0, 0.0, uH);
+    tcylinder.p3 = vec3(1.0, 0.0, 0.0);
+    tcylinder.id = 2;
+    tcylinder.radius = uR;
+
+    Intersection p = toCylinder(tcylinder, ray);
+    return p.id;
+}
+
 
 void main(void) {
     uint seed = uint(gl_FragCoord.x) + uint(gl_FragCoord.y) * uint(uWidth);
@@ -664,9 +684,9 @@ void main(void) {
         case 10:
             id = diskToDisk();
             break;
-        // case 11:
-        //     id = diskToCylinder();
-        //     break;
+        case 11:
+            id = diskToCylinder();
+            break;
         case 20:
             id = rectToRectParallel();
             break;
