@@ -267,6 +267,53 @@
   </div>
   <hr>
 
+  <h2>Differential surface to right triangle in parallel plane</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_ds-triangle.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>h ( h &gt; 0 ) : </td>
+            <td><input type=number id="ds-triangle-h" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>l ( l &gt; 0 ) : </td>
+            <td><input type=number id="ds-triangle-l" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>&theta; [&deg;] ( 0 &lt; &theta; &lt; 90 ) : </td>
+            <td><input type=number id="ds-triangle-theta" step=1.0 value=30.0 min=0.0 max=90.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="ds-triangle-ana-calc">Calculate</button></td>
+            <td><output id="ds-triangle-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="ds-triangle-num-calc">Calculate</button></td>
+            <td><output id="ds-triangle-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{gather}
+        F_{d1-2} = \frac{D}{2\pi A} \arctan \left( \frac{D \tan \theta}{A} \right), ~~
+        \mathrm{where}~~D = \frac{d}{h}, ~~ A = \sqrt{1+D^2}
+        \end{gather}
+      </div>
+    </div>
+  </div>
+  <hr>
+
   <h2>Disk to parallel coaxial disk</h2>
 
   <div class="parent">

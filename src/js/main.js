@@ -77,6 +77,14 @@ document.getElementById("ds-cylinder-ana-calc").onclick = function() {
   result.value = vf.dsToCylinder(r.value, h.value, l.value)
 }
 
+document.getElementById("ds-triangle-ana-calc").onclick = function() {
+  let h = document.getElementById('ds-triangle-h');
+  let l = document.getElementById('ds-triangle-l');
+  let theta_deg = document.getElementById('ds-triangle-theta');
+  let result = document.getElementById('ds-triangle-ana-vf')
+  result.value = vf.dsToTriangle(h.value, l.value, theta_deg.value*Math.PI/180.0);
+}
+
 document.getElementById("disk-disk-ana-calc").onclick = function() {
   let r1 = document.getElementById('disk-disk-r1')
   let r2 = document.getElementById('disk-disk-r2')
@@ -329,6 +337,35 @@ document.getElementById("ds-cylinder-num-calc").onclick = function() {
   gl.uniform1f(hLoc, h.value);
   let lLoc = gl.getUniformLocation(program, 'uL');
   gl.uniform1f(lLoc, l.value);
+  draw();
+
+  let array = readInt32Array();
+  let count = arrayCount(array);
+  let vf = {}
+  for( const property in count ) {
+    vf[property] = count[property] / (gl.drawingBufferWidth*gl.drawingBufferHeight)
+  }
+  result.value = vf['1']
+}
+
+document.getElementById("ds-triangle-num-calc").onclick = function() {
+  let h = document.getElementById('ds-triangle-h');
+  let l = document.getElementById('ds-triangle-l');
+  let theta_deg = document.getElementById('ds-triangle-theta');
+  let result = document.getElementById('ds-triangle-num-vf')
+  
+  let caseLoc = gl.getUniformLocation(program, 'uCase');
+  gl.uniform1i(caseLoc, 7);
+  widthLoc = gl.getUniformLocation(program, 'uWidth');
+  gl.uniform1i(widthLoc, canvas.width);
+  heightLoc = gl.getUniformLocation(program, 'uHeight');
+  gl.uniform1i(heightLoc, canvas.height);
+  let hLoc = gl.getUniformLocation(program, 'uH');
+  gl.uniform1f(hLoc, h.value);
+  let lLoc = gl.getUniformLocation(program, 'uL');
+  gl.uniform1f(lLoc, l.value);
+  let thetaLoc = gl.getUniformLocation(program, 'uTheta');
+  gl.uniform1f(thetaLoc, theta_deg.value*Math.PI/180.0);
   draw();
 
   let array = readInt32Array();

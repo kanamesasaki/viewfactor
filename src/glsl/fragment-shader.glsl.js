@@ -17,6 +17,7 @@ uniform int uCase;
 // 4: dsToRectVertical
 // 5: dsToSphere
 // 6: dsToCylinder
+// 7: dsToTriangle
 
 // 10: diskToDisk
 // 11: diskToCylinder
@@ -284,6 +285,32 @@ Intersection toRect(Rectangle s, Ray ray) {
     return p;
 }
 
+Intersection toTriangle(Triangle s, Ray ray) {
+    vec3 Ry = s.p3 - s.p1;
+    vec3 Rx = s.p2 - s.p1;
+    vec3 Rz = cross(Rx, Ry);
+    Intersection p;
+    p.id = 0;
+    p.dist = -1.0;
+    if (dot(Rz, ray.rd) == 0.0) {
+        return p;
+    }
+    mat3 Rmat = mat3(Rx, Ry, Rz);
+    mat3 Rinv = inverse(Rmat);
+    vec3 Ro = Rinv * (ray.ro - s.p1);
+    vec3 Rd = Rinv * ray.rd;
+    float t = -Ro[2]/Rd[2];
+    if (t <= 0.0) {
+        return p;
+    }
+    vec3 pLocal = Ro + Rd * t;
+    if (0.0 <= pLocal[0] && pLocal[0] <= 1.0 && 0.0 <= pLocal[1] && pLocal[1] <= 1.0 && 0.0 <= pLocal[0] + pLocal[1] && pLocal[0] + pLocal[1] <= 1.0) {
+        p.id = s.id;
+        p.dist = t;
+    }
+    return p;
+}
+
 Intersection toSphere(Sphere s, Ray ray) {
     vec3 Rx = normalize(s.p3 - s.p1);
     vec3 Rz = normalize(s.p2 - s.p1);
@@ -537,6 +564,22 @@ int dsToCylinder(void) {
     return p.id;
 }
 
+int dsToTriangle(void) {
+    vec3 x = vec3(1.0, 0.0, 0.0);
+    vec3 y = vec3(0.0, 1.0, 0.0);
+    vec3 z = vec3(0.0, 0.0, 1.0);
+    Ray ray = fromDs(vec3(0.0, 0.0, 0.0), x, y, z);
+
+    Triangle tri;
+    tri.p1 = vec3(0.0, 0.0, uH);
+    tri.p2 = vec3(uL, 0.0, uH);
+    tri.p3 = vec3(uL, uL*tan(uTheta), uH);
+    tri.id = 1;
+
+    Intersection p = toTriangle(tri, ray);
+    return p.id;
+}
+
 int diskToDisk(void) {
     Disk fd;
     fd.p1 = vec3(0.0, 0.0, 0.0);
@@ -701,6 +744,9 @@ void main(void) {
         case 6:
             id = dsToCylinder();
             break;
+        case 7:
+            id = dsToTriangle();
+            break;
         case 10:
             id = diskToDisk();
             break;
@@ -728,6 +774,9 @@ void main(void) {
         case 40:
             id = cylinderToCylinder();
             break;
+        // case 50:
+        //     id = triToTriParallel();
+        //     break;
         // case 100:
         //     id = triToTriArbitrary();
         //     break;

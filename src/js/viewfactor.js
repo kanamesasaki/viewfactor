@@ -69,6 +69,19 @@ export function dsToCylinder(r, h, l) {
     return vf
 }
 
+export function dsToTriangle(h, l, theta) {
+    let vf
+    if (h > 0 && l > 0 && theta > 0 && theta < Math.PI/2.0) {
+        let D = l/h
+        let A = Math.sqrt(1+D*D)
+        vf = D/(2.0*Math.PI*A) * Math.atan((D*Math.tan(theta))/A)
+    }
+    else {
+        vf = Number.NaN
+    }
+    return vf
+}
+
 export function diskToDisk(a, r1, r2) {
     let vf
     if (a > 0.0 && r1 > 0.0 && r2 >= 0.0) {
