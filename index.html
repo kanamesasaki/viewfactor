@@ -594,6 +594,58 @@
   </div>
   <hr>
 
+  <!-- 32: sphereToCone -->
+  <h2>Unit sphere to coaxial disk</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_sphere-cone.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>h ( h &gt; 0 ) : </td>
+            <td><input type=number id="sphere-cone-h" step=0.1 value=1.0 min=0.0><br>
+          </tr>
+          <tr>
+            <td>r&#8321; ( r&#8321; &gt; 0 ) : </td>
+            <td><input type=number id="sphere-cone-r1" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>r&#8322; ( r&#8322; &gt; 0 ) : </td>
+            <td><input type=number id="sphere-cone-r2" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>&theta; [&deg;] ( 0 &le; &theta; &le; 90 ) : </td>
+            <td><input type=number id="sphere-cone-theta" step=1.0 value=60.0 min=0.0 max=90.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="sphere-cone-ana-calc">Calculate</button></td>
+            <td><output id="sphere-cone-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="sphere-cone-num-calc">Calculate</button></td>
+            <td><output id="sphere-cone-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{align}
+        F_{1-2} &= \frac{1}{2} \left[ 1 - \frac{1+H+R/\tan\theta}{\sqrt{(1+H+R/\tan\theta)^2 + R^2}} \right] \\
+        &\mathrm{where} ~~ H = \frac{h}{r_1}, ~~ R = \frac{r_2}{r_1}, ~~ \theta \ge \arcsin \frac{1}{1+H}
+        \end{align}
+      </div>
+    </div>
+  </div>
+  <hr>
+
   <h2>Interior of outer cylinder to exterior of coaxial inner cylinder</h2>
 
   <div class="parent">

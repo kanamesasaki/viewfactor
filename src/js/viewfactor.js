@@ -151,6 +151,20 @@ export function sphereToDisk(h, r) {
     return vf
 }
 
+export function sphereToCone(h, r1, r2, theta) {
+    let vf = Number.NaN
+    if (h > 0.0 && r1 > 0.0 && r2 > 0.0 && theta > 0.0 && theta < Math.PI/2) {
+        let H = h/r1
+        let R = r2/r1
+        console.log(Math.asin(1/(H+1))*180/Math.PI, 'degree')
+        if (theta >= Math.asin(1/(H+1))) {
+            let temp = 1.0+H+R/Math.tan(theta)
+            vf = 0.5 * (1.0 - temp/Math.sqrt(temp*temp + R*R))
+        }
+    }
+    return vf
+}
+
 export function cylinderToCylinder(h, r1, r2) {
     let vf
     let R = r2/r1

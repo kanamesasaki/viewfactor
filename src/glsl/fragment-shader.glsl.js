@@ -25,8 +25,10 @@ uniform int uCase;
 // 21: rectToRectVertical
 // 30: sphereToRect
 // 31: sphereToDisk
+// 32: sphereToCylinder
 // 33: spehreToCone
 // 40: cylinderToCylinder
+// 50: coneToDisk
 
 // 100: triToTriArbitrary
 // 101: rectTorectArbitrary
@@ -232,6 +234,15 @@ uniform struct Cylinder {
     float radius;
 };
 
+uniform struct Cone {
+    int id;
+    vec3 p1;
+    vec3 p2;
+    vec3 p3;
+    float radius1;
+    float radius2;
+};
+
 Intersection toDisk(Disk s, Ray ray) {
     vec3 Rx = normalize(s.p3 - s.p1);
     vec3 Rz = normalize(s.p2 - s.p1);
@@ -388,6 +399,62 @@ Intersection toCylinder(Cylinder s, Ray ray) {
     else {
         if (tp > 0.0) {
             if (pp[2] >= 0.0 && pp[2] <= height) {
+                p.id = s.id;
+                p.dist = tp;
+            }
+            else {}
+        }
+        else {}
+    }
+    return p;
+}
+
+Intersection toCone(Cone s, Ray ray) {
+    vec3 Rx = normalize(s.p3 - s.p1);
+    vec3 Rz = normalize(s.p2 - s.p1);
+    vec3 Ry = cross(Rz, Rx);
+    vec3 p0 = s.radius1/(s.radius1 - s.radius2)*(s.p2 - s.p1);
+    float ang = (s.radius1 - s.radius2) / distance(s.p2, s.p1);
+    Intersection p;
+    p.id = 0;
+    p.dist = -1.0;
+    if (dot(Rz, ray.rd) == 0.0) {
+        return p;
+    }
+    mat3 Rmat = mat3(Rx, Ry, Rz);
+    mat3 Rinv = transpose(Rmat);
+    vec3 Ro = Rinv * (ray.ro - p0);
+    vec3 Rd = Rinv * ray.rd;
+    float ang2 = ang*ang;
+    float a = Rd[0]*Rd[0] + Rd[1]*Rd[1] - ang2*Rd[2]*Rd[2];
+    float b = Ro[0]*Rd[0] + Ro[1]*Rd[1] - ang2*Ro[2]*Rd[2];
+    float c = Ro[0]*Ro[0] + Ro[1]*Ro[1] - ang2*Ro[2]*Ro[2];
+    float d = b*b - a*c;
+    if (d < 0.0) {
+        return p;
+    }
+    float tp = (-b+sqrt(d)) / a;
+    float tm = (-b-sqrt(d)) / a;
+    vec3 pp = Ro + tp * Rd;
+    vec3 pm = Ro + tm * Rd;
+    float height = length(s.p2 - s.p1);
+
+    if (tm > 0.0) {
+        if (pm[2] <= 0.0 && pm[2] >= -height) {
+            p.id = s.id;
+            p.dist = tm;
+        }
+        else {
+            if (pp[2] <= 0.0 && pp[2] >= -height) {
+                p.id = s.id;
+                p.dist = tp;
+            }
+            else {}
+        }
+    }
+    else {
+        if (tp > 0.0) {
+            if (pp[2] <= 0.0 && pp[2] >= -height) {
                 p.id = s.id;
                 p.dist = tp;
             }
@@ -675,6 +742,27 @@ int sphereToDisk(void) {
     return p.id;
 }
 
+int sphereToCone(void) {
+    Sphere sphere;
+    sphere.p1 = vec3(0.0, 0.0, uR2/tan(uTheta)+uH+uR1);
+    sphere.p2 = vec3(0.0, 0.0, uR2/tan(uTheta)+uH+uR1+1.0);
+    sphere.p3 = vec3(1.0, 0.0, uR2/tan(uTheta)+uH+uR1);
+    sphere.id = 1;
+    sphere.radius = uR1;
+    Ray ray = fromSphere(sphere);
+
+    Cone cone;
+    cone.p1 = vec3(0.0, 0.0, 0.0);
+    cone.p2 = vec3(0.0, 0.0, uR2/tan(uTheta));
+    cone.p3 = vec3(1.0, 0.0, 0.0);
+    cone.id = 2;
+    cone.radius1 = uR2;
+    cone.radius2 = 0.0;
+
+    Intersection p = toCone(cone, ray);
+    return p.id;
+}
+
 int cylinderToCylinder(void) {
     Cylinder fcylinder;
     fcylinder.p1 = vec3(0.0, 0.0, 0.0);
@@ -768,9 +856,9 @@ void main(void) {
         // case 32:
         //     id = sphereToCylinder();
         //     break;
-        // case 33:
-        //     id = spehreToCone();
-        //     break;
+        case 33:
+            id = sphereToCone();
+            break;
         case 40:
             id = cylinderToCylinder();
             break;

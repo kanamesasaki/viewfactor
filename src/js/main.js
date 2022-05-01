@@ -124,6 +124,15 @@ document.getElementById("sphere-disk-ana-calc").onclick = function() {
   result.value = vf.sphereToDisk(h.value, r.value)
 }
 
+document.getElementById("sphere-cone-ana-calc").onclick = function() {
+  let h = document.getElementById('sphere-cone-h')
+  let r1 = document.getElementById('sphere-cone-r1')
+  let r2 = document.getElementById('sphere-cone-r2')
+  let theta_deg = document.getElementById('sphere-cone-theta')
+  let result = document.getElementById('sphere-cone-ana-vf')
+  result.value = vf.sphereToCone(h.value, r1.value, r2.value, theta_deg.value*Math.PI/180.0)
+}
+
 document.getElementById("cylinder-cylinder-ana-calc").onclick = function() {
   let h = document.getElementById('cylinder-cylinder-h')
   let r1 = document.getElementById('cylinder-cylinder-r1')
@@ -508,6 +517,38 @@ document.getElementById("sphere-disk-num-calc").onclick = function() {
   gl.uniform1f(rLoc, r.value);
   let hLoc = gl.getUniformLocation(program, 'uH');
   gl.uniform1f(hLoc, h.value);
+  draw();
+
+  let array = readInt32Array();
+  let count = arrayCount(array);
+  let vf = {}
+  for( const property in count ) {
+    vf[property] = count[property] / (gl.drawingBufferWidth*gl.drawingBufferHeight)
+  }
+  result.value = vf['2']
+}
+
+document.getElementById("sphere-cone-num-calc").onclick = function() {
+  let r1 = document.getElementById('sphere-cone-r1');
+  let r2 = document.getElementById('sphere-cone-r2');
+  let h = document.getElementById('sphere-cone-h');
+  let theta_deg = document.getElementById('sphere-cone-theta');
+  let result = document.getElementById('sphere-cone-num-vf')
+  
+  let caseLoc = gl.getUniformLocation(program, 'uCase');
+  gl.uniform1i(caseLoc, 33);
+  widthLoc = gl.getUniformLocation(program, 'uWidth');
+  gl.uniform1i(widthLoc, canvas.width);
+  heightLoc = gl.getUniformLocation(program, 'uHeight');
+  gl.uniform1i(heightLoc, canvas.height);
+  let r1Loc = gl.getUniformLocation(program, 'uR1');
+  gl.uniform1f(r1Loc, r1.value);
+  let r2Loc = gl.getUniformLocation(program, 'uR2');
+  gl.uniform1f(r2Loc, r2.value);
+  let hLoc = gl.getUniformLocation(program, 'uH');
+  gl.uniform1f(hLoc, h.value);
+  let thetaLoc = gl.getUniformLocation(program, 'uTheta');
+  gl.uniform1f(thetaLoc, theta_deg.value*Math.PI/180.0);
   draw();
 
   let array = readInt32Array();
