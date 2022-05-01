@@ -74,6 +74,53 @@
   </div>
   <hr>
 
+  <h2>Differential surface to circular disk in parallel plane</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_ds-disk-parallel.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>r ( r &gt; 0 ) : </td>
+            <td><input type=number id="ds-disk-parallel-r" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>h ( h &gt; 0 ) : </td>
+            <td><input type=number id="ds-disk-parallel-h" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+          <tr>
+            <td>a ( a &ge; 0 ) : </td>
+            <td><input type=number id="ds-disk-parallel-a" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="ds-disk-parallel-ana-calc">Calculate</button></td>
+            <td><output id="ds-disk-parallel-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="ds-disk-parallel-num-calc">Calculate</button></td>
+            <td><output id="ds-disk-parallel-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{gather}
+        F_{d1-2} = \frac{1}{2} \left[ 1 - \frac{Z-2R^2}{\sqrt{Z^2 - 4R^2}} \right] \\
+        \mathrm{where}~~H = \frac{h}{a}, ~~ R = \frac{r}{a}, ~~ Z = 1 + H^2 + R^2 \\
+        \end{gather}
+      </div>
+    </div>
+  </div>
+  <hr>
+
   <h2>Differential surface to rectangular surface in parallel plane</h2>
 
   <div class="parent">
@@ -692,6 +739,7 @@
       </div>
     </div>
   </div>
+  <hr>
 
   <h2>Interior of cone to base disk</h2>
 

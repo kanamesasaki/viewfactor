@@ -13,6 +13,17 @@ export function dsToDisk(r, h, theta_deg) {
     return vf
 }
 
+export function dsToDiskOffsetParallel(r, h, a) {
+    let vf = Number.NaN
+    if (r > 0.0 && h > 0.0 && a >= 0.0) {
+        let H = h/a
+        let R = r/a
+        let Z = 1.0 + H*H + R*R
+        vf = 0.5 * (1.0 - (Z - 2.0*R*R)/Math.sqrt(Z*Z - 4.0*R*R))
+    }
+    return vf
+}
+
 export function dsToRectangleParallel(a, b, c) {
     let vf
     if (a >= 0 && b >= 0 && c > 0) {

@@ -590,6 +590,23 @@ int dsToDisk(void) {
     return p.id;
 }
 
+int dsToDiskOffsetParallel(void) {
+    vec3 x = vec3(1.0, 0.0, 0.0);
+    vec3 y = vec3(0.0, 1.0, 0.0);
+    vec3 z = vec3(0.0, 0.0, 1.0);
+    Ray ray = fromDs(vec3(uA, 0.0, 0.0), x, y, z);
+
+    Disk disk;
+    disk.p1 = vec3(0.0, 0.0, uH);
+    disk.p2 = vec3(0.0, 0.0, uH+1.0);
+    disk.p3 = vec3(1.0, 0.0, uH);
+    disk.id = 1;
+    disk.radius = uR;
+
+    Intersection p = toDisk(disk, ray);
+    return p.id;
+}
+
 int dsToRectParallel(void) {
     vec3 x = vec3(1.0, 0.0, 0.0);
     vec3 y = vec3(0.0, 1.0, 0.0);
@@ -861,9 +878,9 @@ void main(void) {
         case 0:
             id = dsToDisk();
             break;
-        // case 1:
-        //     id = dsToDiskOffsetParallel();
-        //     break;
+        case 1:
+            id = dsToDiskOffsetParallel();
+            break;
         // case 2:
         //     id = dsToDiskOffsetVertical();
         //     break;

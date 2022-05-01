@@ -45,6 +45,14 @@ document.getElementById("ds-disk-ana-calc").onclick = function() {
   result.value = vf.dsToDisk(r.value, h.value, theta_deg.value);
 }
 
+document.getElementById("ds-disk-parallel-ana-calc").onclick = function() {
+  let r = document.getElementById('ds-disk-parallel-r');
+  let h = document.getElementById('ds-disk-parallel-h');
+  let a = document.getElementById('ds-disk-parallel-a');
+  let result = document.getElementById('ds-disk-parallel-ana-vf')
+  result.value = vf.dsToDiskOffsetParallel(r.value, h.value, a.value);
+}
+
 document.getElementById("ds-rect-p-ana-calc").onclick = function() {
   let a = document.getElementById('ds-rect-p-a');
   let b = document.getElementById('ds-rect-p-b');
@@ -237,6 +245,35 @@ document.getElementById("ds-disk-num-calc").onclick = function() {
   gl.uniform1f(hLoc, h.value);
   let thetaLoc = gl.getUniformLocation(program, 'uTheta');
   gl.uniform1f(thetaLoc, theta_deg.value*Math.PI/180.0);
+  draw();
+
+  let array = readInt32Array();
+  let count = arrayCount(array);
+  let vf = {}
+  for( const property in count ) {
+    vf[property] = count[property] / (gl.drawingBufferWidth*gl.drawingBufferHeight)
+  }
+  result.value = vf['1']
+}
+
+document.getElementById("ds-disk-parallel-num-calc").onclick = function() {
+  let r = document.getElementById('ds-disk-parallel-r');
+  let h = document.getElementById('ds-disk-parallel-h');
+  let a = document.getElementById('ds-disk-parallel-a');
+  let result = document.getElementById('ds-disk-parallel-num-vf')
+  
+  let caseLoc = gl.getUniformLocation(program, 'uCase');
+  gl.uniform1i(caseLoc, 1);
+  widthLoc = gl.getUniformLocation(program, 'uWidth');
+  gl.uniform1i(widthLoc, canvas.width)
+  heightLoc = gl.getUniformLocation(program, 'uHeight');
+  gl.uniform1i(heightLoc, canvas.height);
+  let rLoc = gl.getUniformLocation(program, 'uR');
+  gl.uniform1f(rLoc, r.value);
+  let hLoc = gl.getUniformLocation(program, 'uH');
+  gl.uniform1f(hLoc, h.value);
+  let aLoc = gl.getUniformLocation(program, 'uA');
+  gl.uniform1f(aLoc, a.value);
   draw();
 
   let array = readInt32Array();
