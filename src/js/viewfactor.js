@@ -189,3 +189,12 @@ export function diskToCylinder(h, r) {
     }
     return vf
 }
+
+export function coneToDisk(h, r) {
+    let vf = Number.NaN
+    let H = h/r
+    if (r > 0.0 && h > 0.0) {
+        vf = 1.0 / Math.sqrt(1.0 + H*H)
+    }
+    return vf
+}

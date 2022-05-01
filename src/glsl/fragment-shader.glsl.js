@@ -548,6 +548,31 @@ Ray fromSphere(Sphere s) {
     return ray;
 }
 
+Ray fromCone(Cone s) {
+    vec3 Rx = normalize(s.p3 - s.p1);
+    vec3 Rz = normalize(s.p2 - s.p1);
+    vec3 Ry = cross(Rz, Rx);
+    float height = length(s.p2 - s.p1);
+    float tan_theta = (s.radius1 - s.radius2) / height;
+    float theta = atan(tan_theta);
+    float omega = 2.0*PI*floatMRG32k3a();
+    float r1_tan = s.radius1/tan_theta;
+    float q = floatMRG32k3a();
+    float h = r1_tan - sqrt(r1_tan*r1_tan - 2.0*q*height*r1_tan + q*height*height);
+    float r = s.radius1 - (s.radius1 - s.radius2) * h / height;
+    Ray ray;
+    ray.ro = s.p1 + h*Rz + r*cos(omega)*Rx + r*sin(omega)*Ry;
+    vec3 rotRz = cos(theta)*(cos(omega)*Rx + sin(omega)*Ry) + sin(theta)*Rz;
+    vec3 rotRx = cos(omega+PI/2.0)*Rx + sin(omega+PI/2.0)*Ry;
+    vec3 rotRy = -sin(theta)*(cos(omega)*Rx + sin(omega)*Ry) + cos(theta)*Rz;
+    float psi = acos(1.0-2.0*floatMRG32k3a())/2.0;
+    float phi = 2.0*PI*floatMRG32k3a();
+    vec3 rdLocal = vec3(sin(psi)*cos(phi), sin(psi)*sin(phi), cos(psi));
+    mat3 Rmat = mat3(rotRx, rotRy, rotRz);
+    ray.rd = Rmat * rdLocal;
+    return ray;
+}
+
 int dsToDisk(void) {
     vec3 x = vec3(cos(uTheta),0.0,-sin(uTheta));
     vec3 y = vec3(0.0, 1.0, 0.0);
@@ -803,6 +828,28 @@ int diskToCylinder(void) {
     return p.id;
 }
 
+int coneToDisk(void) {
+    Cone cone;
+    cone.p1 = vec3(0.0, 0.0, 0.0);
+    cone.p2 = vec3(0.0, 0.0, uH);
+    cone.p3 = vec3(1.0, 0.0, 0.0);
+    cone.id = 1;
+    cone.radius1 = uR;
+    cone.radius2 = 0.0;
+    Ray ray = fromCone(cone);
+    ray.rd = -1.0 * ray.rd;
+
+    Disk disk;
+    disk.p1 = vec3(0.0, 0.0, 0.0);
+    disk.p2 = vec3(0.0, 0.0, 1.0);
+    disk.p3 = vec3(1.0, 0.0, 0.0);
+    disk.id = 2;
+    disk.radius = uR;
+
+    Intersection p = toDisk(disk, ray);
+    return p.id;
+}
+
 
 void main(void) {
     uint seed = uint(gl_FragCoord.x) + uint(gl_FragCoord.y) * uint(uWidth);
@@ -862,9 +909,9 @@ void main(void) {
         case 40:
             id = cylinderToCylinder();
             break;
-        // case 50:
-        //     id = triToTriParallel();
-        //     break;
+        case 50:
+            id = coneToDisk();
+            break;
         // case 100:
         //     id = triToTriArbitrary();
         //     break;

@@ -594,8 +594,8 @@
   </div>
   <hr>
 
-  <!-- 32: sphereToCone -->
-  <h2>Unit sphere to coaxial disk</h2>
+  <!-- 33: sphereToCone -->
+  <h2>Sphere to coaxial cone</h2>
 
   <div class="parent">
     <div class="child">
@@ -617,7 +617,7 @@
             <td><input type=number id="sphere-cone-r2" step=0.1 value=1.0 min=0.0></td>
           </tr>
           <tr>
-            <td>&theta; [&deg;] ( 0 &le; &theta; &le; 90 ) : </td>
+            <td>&theta; [&deg;] ( 0 &lt; &theta; &lt; 90 ) : </td>
             <td><input type=number id="sphere-cone-theta" step=1.0 value=60.0 min=0.0 max=90.0></td>
           </tr>
         </table>
@@ -688,6 +688,48 @@
         &F_{2-1} = \frac{1}{R} \left( 1 - \frac{H^2+R^2-1}{4H} - \frac{1}{\pi} \left\{ \arccos \frac{H^2-R^2+1}{H^2+R^2-1} \right. \right. \\
         &\left. \left. - \frac{\sqrt{(H^2+R^2+1)^2-4R^2}}{2H} \arccos \frac{H^2-R^2+1}{R(H^2+R^2-1)} - \frac{H^2-R^2+1}{2H} \arcsin \frac{1}{R} \right\} \right) \\
         &\hspace{50pt} \mathrm{where} ~~ R_1 = \frac{r_1}{h}, ~~R_2 = \frac{r_2}{h}, ~~A = R_2 + R_1, ~~B = R_2 - R_1
+        \end{align}
+      </div>
+    </div>
+  </div>
+
+  <h2>Interior of cone to base disk</h2>
+
+  <div class="parent">
+    <div class="child">
+      <img src=".\images\vf_cone-disk.svg" width="400">
+    </div>
+    <div class="child">
+      <div class="item">
+        <table>
+          <tr>
+            <td>h ( h &gt; 0 ) : </td>
+            <td><input type=number id="cone-disk-h" step=0.1 value=1.0 min=0.0><br>
+          </tr>
+          <tr>
+            <td>r ( r &gt; 0 ) : </td>
+            <td><input type=number id="cone-disk-r" step=0.1 value=1.0 min=0.0></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        <table>
+          <tr>
+            <td>Analytical calculation</td>
+            <td><button type="button" id="cone-disk-ana-calc">Calculate</button></td>
+            <td><output id="cone-disk-ana-vf">0.0</output></td>
+          </tr>
+          <tr>
+            <td>Monte-Carlo ray tracing</td>
+            <td><button type="button" id="cone-disk-num-calc">Calculate</button></td>
+            <td><output id="cone-disk-num-vf">0.0</output></td>
+          </tr>
+        </table>
+      </div>
+      <div class="item">
+        \begin{align}
+        &F_{1-2} = \frac{1}{\sqrt{1+H^2}}, ~~
+        \mathrm{where} ~~ H = \frac{h}{r}
         \end{align}
       </div>
     </div>
