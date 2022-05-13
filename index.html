@@ -8,11 +8,11 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-CCZTCJYRD8');
+    gtag('config', 'G-CCZTCJYRD8', { 'anonymize_ip': true });
   </script>
   <meta charset="UTF-8">
-  <title>View Factor Calculator</title>
-  <meta name="description" content="View factors for several geometrical configurations are calculated by analytical equation and Monte-Carlo ray tracing.">
+  <title>View Factor Calculation: Analytical and Monte Carlo Method</title>
+  <meta name="description" content="Radiation view factors (configuration factors) for different geometrical configurations are calculated by the analytical equations and Monte Carlo method.">
   <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   <link rel="stylesheet" href="./style.css">
   <link rel="icon" type="image/png" href="./images/icon.png">
@@ -20,10 +20,14 @@
 
 <header>
   <a href="https://kanamesasaki.github.io/">Author's page</a> &#187;
-  <a href="index.html">View Factor Calculator</a>
+  <a href="index.html">View Factor Calculation</a>
 </header>
 <body>
-  <h1>View Factor Calculator</h1>
+  <h1>View Factor Calculation: Analytical and Monte Carlo Method</h1>
+  <p>
+    In this web page, radiation view factors (also know as configuration factors) for different geometrical configurations can be calculated by the analytical equations and Monte Carlo method.
+    The Monte Carlo calculation uses WebGL 2.0. Depending on the browser and hardware configuration, this functionality might not work.
+  </p>
 
   <h2>Differential surface to circular disk</h2>
 
@@ -56,7 +60,7 @@
             <td><output id="ds-disk-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="ds-disk-num-calc">Calculate</button></td>
             <td><output id="ds-disk-num-vf">0.0</output></td>
           </tr>
@@ -105,7 +109,7 @@
             <td><output id="ds-disk-parallel-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="ds-disk-parallel-num-calc">Calculate</button></td>
             <td><output id="ds-disk-parallel-num-vf">0.0</output></td>
           </tr>
@@ -152,7 +156,7 @@
             <td><output id="ds-rect-p-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="ds-rect-p-num-calc">Calculate</button></td>
             <td><output id="ds-rect-p-num-vf">0.0</output></td>
           </tr>
@@ -200,7 +204,7 @@
             <td><output id="ds-rect-v-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="ds-rect-v-num-calc">Calculate</button></td>
             <td><output id="ds-rect-v-num-vf">0.0</output></td>
           </tr>
@@ -248,7 +252,7 @@
             <td><output id="ds-sphere-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="ds-sphere-num-calc">Calculate</button></td>
             <td><output id="ds-sphere-num-vf">0.0</output></td>
           </tr>
@@ -297,7 +301,7 @@
             <td><output id="ds-cylinder-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="ds-cylinder-num-calc">Calculate</button></td>
             <td><output id="ds-cylinder-num-vf">0.0</output></td>
           </tr>
@@ -345,7 +349,7 @@
             <td><output id="ds-triangle-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="ds-triangle-num-calc">Calculate</button></td>
             <td><output id="ds-triangle-num-vf">0.0</output></td>
           </tr>
@@ -392,7 +396,7 @@
             <td><output id="disk-disk-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="disk-disk-num-calc">Calculate</button></td>
             <td><output id="disk-disk-num-vf">0.0</output></td>
           </tr>
@@ -436,7 +440,7 @@
             <td><output id="disk-cylinder-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="disk-cylinder-num-calc">Calculate</button></td>
             <td><output id="disk-cylinder-num-vf">0.0</output></td>
           </tr>
@@ -483,7 +487,7 @@
             <td><output id="rect-rect-p-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="rect-rect-p-num-calc">Calculate</button></td>
             <td><output id="rect-rect-p-num-vf">0.0</output></td>
           </tr>
@@ -532,7 +536,7 @@
             <td><output id="rect-rect-v-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="rect-rect-v-num-calc">Calculate</button></td>
             <td><output id="rect-rect-v-num-vf">0.0</output></td>
           </tr>
@@ -581,7 +585,7 @@
             <td><output id="sphere-rect-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="sphere-rect-num-calc">Calculate</button></td>
             <td><output id="sphere-rect-num-vf">0.0</output></td>
           </tr>
@@ -625,7 +629,7 @@
             <td><output id="sphere-disk-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="sphere-disk-num-calc">Calculate</button></td>
             <td><output id="sphere-disk-num-vf">0.0</output></td>
           </tr>
@@ -677,7 +681,7 @@
             <td><output id="sphere-cone-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="sphere-cone-num-calc">Calculate</button></td>
             <td><output id="sphere-cone-num-vf">0.0</output></td>
           </tr>
@@ -724,7 +728,7 @@
             <td><output id="cylinder-cylinder-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="cylinder-cylinder-num-calc">Calculate</button></td>
             <td><output id="cylinder-cylinder-num-vf">0.0</output></td>
           </tr>
@@ -768,7 +772,7 @@
             <td><output id="cone-disk-ana-vf">0.0</output></td>
           </tr>
           <tr>
-            <td>Monte-Carlo ray tracing</td>
+            <td>Monte Carlo method</td>
             <td><button type="button" id="cone-disk-num-calc">Calculate</button></td>
             <td><output id="cone-disk-num-vf">0.0</output></td>
           </tr>
@@ -794,7 +798,7 @@
 
 <footer>
   <a href="https://kanamesasaki.github.io/">Author's page</a> &#187;
-  <a href="index.html">View Factor Calculator</a>
-  <span style="float: right">Copyright 2022, Kaname Sasaki</span>
+  <a href="index.html">View Factor Calculation</a>
+  <span style="float: right">Copyright 2022, K. Sasaki</span>
 </footer>
 </html>
