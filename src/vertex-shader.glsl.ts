@@ -1,12 +1,8 @@
-export default `#version 300 es
-precision mediump float;
+export const vertex:string = `#version 300 es
+precision highp float;
 
-in vec4 vColor;
-uniform vec2 uInverseTextureSize;
-out vec4 fragColor;
-uniform int uWidth;
-uniform int uHeight;
-uniform int uInitFlag;
+in float iSeed;
+out float oCalc;
 
 // Calculation case
 uniform int uCase;
@@ -45,6 +41,7 @@ uniform float uL;
 uniform float uL1;
 uniform float uL2;
 uniform float uW;
+uniform float uTest;
 
 const float PI = 3.141592653589793238462643383;
 
@@ -161,29 +158,6 @@ uint skipMRG32k3a(uint n) {
     matVecMultModM(a1pow, x1, m1, x1);
     matVecMultModM(a2pow, x2, m2, x2);
     return diffModM(x1[0], x2[0], m1);
-}
-
-vec4 intToVec4(int num) {
-    int rIntValue = num & 0x000000FF;
-    int gIntValue = (num & 0x0000FF00) >> 8;
-    int bIntValue = (num & 0x00FF0000) >> 16;
-    int aIntValue = (num & 0xFF000000) >> 24;
-    vec4 numColor = vec4(float(rIntValue)/255.0, float(gIntValue)/255.0, float(bIntValue)/255.0, float(aIntValue)/255.0); 
-    return numColor; 
-} 
-
-vec4 uintToVec4(uint num) {
-    uint rIntValue = num & 0x000000FFu;
-    uint gIntValue = (num & 0x0000FF00u) >> 8;
-    uint bIntValue = (num & 0x00FF0000u) >> 16;
-    uint aIntValue = (num & 0xFF000000u) >> 24;
-    vec4 numColor = vec4(float(rIntValue)/255.0, float(gIntValue)/255.0, float(bIntValue)/255.0, float(aIntValue)/255.0); 
-    return numColor;
-}
-
-vec4 floatToVec4(float val) {
-    uint conv = floatBitsToUint(val);
-    return uintToVec4(conv);
 }
 
 uniform struct Ray {
@@ -867,10 +841,8 @@ int coneToDisk(void) {
     return p.id;
 }
 
-
 void main(void) {
-    uint seed = uint(gl_FragCoord.x) + uint(gl_FragCoord.y) * uint(uWidth);
-    uint skip = seed * 100u;
+    uint skip = uint(iSeed) * 100u;
     skipMRG32k3a(skip);
     int id;
 
@@ -936,8 +908,9 @@ void main(void) {
         //     id = rectTorectArbitrary();
         //     break;
         default:
-            id = 0x0;
+            id = 0;
     }
     
-    fragColor = intToVec4(id);
+    oCalc = float(id);
+    // oCalc = uR;
 }`

@@ -11,22 +11,19 @@
     gtag('config', 'G-CCZTCJYRD8', { 'anonymize_ip': true });
   </script>
   <meta charset="UTF-8">
-  <title>View Factor Calculation: Analytical and Monte Carlo Method</title>
-  <meta name="description" content="Radiation view factors (configuration factors) for different geometrical configurations are calculated by the analytical equations and Monte Carlo method.">
+  <title>View Factor Calculator: Analytical and Monte Carlo Method</title>
+  <meta name="description" content="Radiation view factors (configuration factors) for different geometrical configurations are calculated by the analytical formula and Monte Carlo method.">
   <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   <link rel="stylesheet" href="./style.css">
   <link rel="icon" type="image/png" href="./images/icon.png">
 </head>
 
-<header>
-  <a href="https://kanamesasaki.github.io/">Author's page</a> &#187;
-  <a href="index.html">View Factor Calculation</a>
-</header>
 <body>
-  <h1>View Factor Calculation: Analytical and Monte Carlo Method</h1>
+  <h1>View Factor Calculator: Analytical and Monte Carlo Method</h1>
   <p>
-    In this web page, radiation view factors (also know as configuration factors) for different geometrical configurations can be calculated by the analytical equations and Monte Carlo method.
+    In this web page, radiation view factors (also know as configuration factors) for different geometrical configurations can be calculated by the analytical formula and Monte Carlo method.
     The Monte Carlo calculation uses WebGL 2.0. Depending on the browser and hardware configuration, this functionality might not work.
+    The number of rays for the view factor calculation is 100,000. The seeds of the random number generator are fixed, so the results are reproducible.
   </p>
 
   <h2>Differential surface to circular disk</h2>
@@ -787,18 +784,18 @@
     </div>
   </div>
 
-  <div class="screen"></div>
+  <div class="screen">
     <canvas id="webgl-canvas">
       Your browser does not support the HTML5 canvas element.
     </canvas>
   </div>
 
-  <script type="module" src="./src/js/main.js"></script>  
+  <script type="module" src="./bundle.js"></script>  
 </body>
 
 <footer>
   <a href="https://kanamesasaki.github.io/">Author's page</a> &#187;
-  <a href="index.html">View Factor Calculation</a>
-  <span style="float: right">Copyright 2022, K. Sasaki</span>
+  <a href="index.html">View Factor Calculator</a>
+  <span style="float: right">Copyright 2022&#8211;2023, K. Sasaki</span>
 </footer>
 </html>
