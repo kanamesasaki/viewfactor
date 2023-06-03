@@ -8,7 +8,7 @@ module.exports = {
     },  
     output: {
         // the target directory for all output files
-        path: path.join(__dirname,'dist'),
+        path: path.join(__dirname,'docs'),
         filename: '[name].js'  // [name] is defined at entry (bundle in this case)
     },
     resolve: {
@@ -18,7 +18,7 @@ module.exports = {
     devServer: {
         // file location for webpack-dev-server
         static: {
-            directory: path.join(__dirname, "dist"),
+            directory: path.join(__dirname, "docs"),
         },
     },
     module: {

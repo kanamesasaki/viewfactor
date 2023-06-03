@@ -1,1 +1,2 @@
 *.glsl.js linguist-language=GLSL
+*.glsl.ts linguist-language=GLSL
