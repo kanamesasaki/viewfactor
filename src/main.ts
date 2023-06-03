@@ -3,7 +3,7 @@ import * as vf from './viewfactor'
 let nRays: number = 100000;
 const worker: Worker = new Worker('worker.js');
 const canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement
-const offscreen = canvas.transferControlToOffscreen();
+let offscreen: OffscreenCanvas
 let time_start: number;
 let time_end: number;
 
@@ -134,7 +134,11 @@ document.getElementById("cone-disk-ana-calc")!.onclick = function() {
 }
 
 document.getElementById("ds-disk-num-calc")!.onclick = function() {
-  time_start = new Date().getTime();
+  if (offscreen === undefined) {
+    let result = document.getElementById('ds-disk-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let r = document.getElementById('ds-disk-r') as HTMLInputElement;
   let h = document.getElementById('ds-disk-h') as HTMLInputElement;
   let theta_deg = document.getElementById('ds-disk-theta') as HTMLInputElement;
@@ -142,6 +146,11 @@ document.getElementById("ds-disk-num-calc")!.onclick = function() {
 }
 
 document.getElementById("ds-disk-parallel-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('ds-disk-parallel-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let r = document.getElementById('ds-disk-parallel-r') as HTMLInputElement;
   let h = document.getElementById('ds-disk-parallel-h') as HTMLInputElement;
   let a = document.getElementById('ds-disk-parallel-a') as HTMLInputElement;
@@ -149,6 +158,11 @@ document.getElementById("ds-disk-parallel-num-calc")!.onclick = function() {
 }
 
 document.getElementById("ds-rect-p-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('ds-rect-p-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let a = document.getElementById('ds-rect-p-a') as HTMLInputElement;
   let b = document.getElementById('ds-rect-p-b') as HTMLInputElement;
   let c = document.getElementById('ds-rect-p-c') as HTMLInputElement;
@@ -156,6 +170,11 @@ document.getElementById("ds-rect-p-num-calc")!.onclick = function() {
 }
 
 document.getElementById("ds-rect-v-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('ds-rect-v-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let a = document.getElementById('ds-rect-v-a') as HTMLInputElement;
   let b = document.getElementById('ds-rect-v-b') as HTMLInputElement;
   let c = document.getElementById('ds-rect-v-c') as HTMLInputElement;
@@ -163,6 +182,11 @@ document.getElementById("ds-rect-v-num-calc")!.onclick = function() {
 }
 
 document.getElementById("ds-sphere-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('ds-sphere-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let r = document.getElementById('ds-sphere-r') as HTMLInputElement;
   let h = document.getElementById('ds-sphere-h') as HTMLInputElement;
   let theta_deg = document.getElementById('ds-sphere-theta') as HTMLInputElement;
@@ -170,6 +194,11 @@ document.getElementById("ds-sphere-num-calc")!.onclick = function() {
 }
 
 document.getElementById("ds-cylinder-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('ds-cylinder-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let r = document.getElementById('ds-cylinder-r') as HTMLInputElement;
   let h = document.getElementById('ds-cylinder-h') as HTMLInputElement;
   let l = document.getElementById('ds-cylinder-l') as HTMLInputElement;
@@ -177,6 +206,11 @@ document.getElementById("ds-cylinder-num-calc")!.onclick = function() {
 }
 
 document.getElementById("ds-triangle-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('ds-triangle-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let h = document.getElementById('ds-triangle-h') as HTMLInputElement;
   let l = document.getElementById('ds-triangle-l') as HTMLInputElement;
   let theta_deg = document.getElementById('ds-triangle-theta') as HTMLInputElement;
@@ -184,6 +218,11 @@ document.getElementById("ds-triangle-num-calc")!.onclick = function() {
 }
 
 document.getElementById("disk-disk-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('disk-disk-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let r1 = document.getElementById('disk-disk-r1') as HTMLInputElement;
   let r2 = document.getElementById('disk-disk-r2') as HTMLInputElement;
   let h = document.getElementById('disk-disk-h') as HTMLInputElement;
@@ -191,6 +230,11 @@ document.getElementById("disk-disk-num-calc")!.onclick = function() {
 }
 
 document.getElementById("rect-rect-p-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('rect-rect-p-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let a = document.getElementById('rect-rect-p-a') as HTMLInputElement;
   let b = document.getElementById('rect-rect-p-b') as HTMLInputElement;
   let c = document.getElementById('rect-rect-p-c') as HTMLInputElement;
@@ -198,6 +242,11 @@ document.getElementById("rect-rect-p-num-calc")!.onclick = function() {
 }
 
 document.getElementById("rect-rect-v-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('rect-rect-v-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let l = document.getElementById('rect-rect-v-l') as HTMLInputElement;
   let w = document.getElementById('rect-rect-v-w') as HTMLInputElement;
   let h = document.getElementById('rect-rect-v-h') as HTMLInputElement;
@@ -205,6 +254,11 @@ document.getElementById("rect-rect-v-num-calc")!.onclick = function() {
 }
 
 document.getElementById("sphere-rect-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('sphere-rect-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let l1 = document.getElementById('sphere-rect-l1') as HTMLInputElement;
   let l2 = document.getElementById('sphere-rect-l2') as HTMLInputElement;
   let h = document.getElementById('sphere-rect-h') as HTMLInputElement;
@@ -212,12 +266,22 @@ document.getElementById("sphere-rect-num-calc")!.onclick = function() {
 }
 
 document.getElementById("sphere-disk-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('sphere-disk-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let r = document.getElementById('sphere-disk-r') as HTMLInputElement;
   let h = document.getElementById('sphere-disk-h') as HTMLInputElement;
   worker.postMessage({'nRays': nRays, 'type': 'sphere-disk', 'r': Number(r.value), 'h': Number(h.value)});
 }
 
 document.getElementById("sphere-cone-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('sphere-cone-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let r1 = document.getElementById('sphere-cone-r1') as HTMLInputElement;
   let r2 = document.getElementById('sphere-cone-r2') as HTMLInputElement;
   let h = document.getElementById('sphere-cone-h') as HTMLInputElement;
@@ -226,6 +290,11 @@ document.getElementById("sphere-cone-num-calc")!.onclick = function() {
 }
 
 document.getElementById("cylinder-cylinder-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('cylinder-cylinder-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let r1 = document.getElementById('cylinder-cylinder-r1') as HTMLInputElement;
   let r2 = document.getElementById('cylinder-cylinder-r2') as HTMLInputElement;
   let h = document.getElementById('cylinder-cylinder-h') as HTMLInputElement;
@@ -233,12 +302,22 @@ document.getElementById("cylinder-cylinder-num-calc")!.onclick = function() {
 }
 
 document.getElementById("disk-cylinder-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('disk-cylinder-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let r = document.getElementById('disk-cylinder-r') as HTMLInputElement;
   let h = document.getElementById('disk-cylinder-h') as HTMLInputElement;
   worker.postMessage({'nRays': nRays, 'type': 'disk-cylinder', 'r': Number(r.value), 'h': Number(h.value)});
 }
 
 document.getElementById("cone-disk-num-calc")!.onclick = function() {
+  if (offscreen === undefined) {
+    let result = document.getElementById('cone-disk-num-vf') as HTMLInputElement;
+    result.value = 'The requested functionality is not supported'
+    return;
+  }
   let r = document.getElementById('cone-disk-r') as HTMLInputElement;
   let h = document.getElementById('cone-disk-h') as HTMLInputElement;
   worker.postMessage({'nRays': nRays, 'type': 'cone-disk', 'r': Number(r.value), 'h': Number(h.value)});
@@ -246,6 +325,12 @@ document.getElementById("cone-disk-num-calc")!.onclick = function() {
 
 function init() {
   time_start = new Date().getTime();
+  try {
+    offscreen = canvas.transferControlToOffscreen();
+  } catch (e) {
+    console.log('transferControlToOffscreen() failed\n', e);
+    return;
+  }
   worker.postMessage({'canvas': offscreen, 'nRays': nRays, 'type': 'init'}, [offscreen]);
 }
 
