@@ -146,3 +146,8 @@ input {
 output {
     font-size: 16px;
 }
+
+.screen {
+  height: 0;
+  overflow: hidden;
+}
