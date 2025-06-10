@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Allow all crawlers to access all content
+# This site contains view factor calculation tools and educational content
+
+# Sitemap location (if you have one)
+Sitemap: https://viewfactor.thermocraft.space/sitemap.xml
+
+# Common crawl delays (optional)
+Crawl-delay: 1
