@@ -1,29 +1,60 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CCZTCJYRD8"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'G-CCZTCJYRD8', { 'anonymize_ip': true });
-  </script>
+<head>
   <meta charset="UTF-8">
   <title>View Factor Calculator: Analytical and Monte Carlo Method</title>
-  <meta name="description" content="Radiation view factors (configuration factors) for different geometrical configurations are calculated by the analytical formula and Monte Carlo method.">
-  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <meta name="description"
+    content="Radiation view factors (configuration factors) for different geometrical configurations are calculated by the analytical formula and Monte Carlo method.">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://viewfactor.thermocraft.space/">
+  <meta property="og:title" content="View Factor Calculator: Analytical and Monte Carlo Method">
+  <meta property="og:description"
+    content="Radiation view factors (configuration factors) for different geometrical configurations are calculated by the analytical formula and Monte Carlo method.">
+  <meta property="og:image" content="https://viewfactor.thermocraft.space/og-image.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://viewfactor.thermocraft.space/">
+  <meta property="twitter:title" content="View Factor Calculator: Analytical and Monte Carlo Method">
+  <meta property="twitter:description"
+    content="Radiation view factors (configuration factors) for different geometrical configurations are calculated by the analytical formula and Monte Carlo method.">
+  <meta property="twitter:image" content="https://viewfactor.thermocraft.space/og-image.png">
+
+  <!-- カノニカル URL -->
+  <link rel="canonical" href="https://viewfactor.thermocraft.space/" />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NR7TMX1P1S"></script>
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-NR7TMX1P1S", {
+      cookie_flags: "SameSite=None;Secure",
+      consent: "default",
+    });
+  </script>
+
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   <link rel="stylesheet" href="./style.css">
-  <link rel="icon" type="image/png" href="./images/icon.png">
+  <link rel="icon" type="image/svg+xml" href="./logo.svg">
 </head>
 
 <body>
   <h1>View Factor Calculator: Analytical and Monte Carlo Method</h1>
   <p>
-    In this web page, radiation view factors (also know as configuration factors) for different geometrical configurations can be calculated by the analytical formula and Monte Carlo method.
-    The Monte Carlo calculation uses WebGL 2.0. Depending on the browser and hardware configuration, this functionality might not work.
-    The number of rays for the view factor calculation is 100,000. The seeds of the random number generator are fixed, so the results are reproducible.
+    In this web page, radiation view factors (also know as configuration factors) for different geometrical
+    configurations can be calculated by the analytical formula and Monte Carlo method.
+    The Monte Carlo calculation uses WebGL 2.0. Depending on the browser and hardware configuration, this functionality
+    might not work.
+    The number of rays for the view factor calculation is 100,000. The seeds of the random number generator are fixed,
+    so the results are reproducible.
   </p>
 
   <h2>Differential surface to circular disk</h2>
@@ -306,7 +337,8 @@
       </div>
       <div class="item">
         \begin{gather}
-        F_{d1-2} = \frac{L}{\pi H} \left[ \frac{1}{L} \arctan \frac{L}{\sqrt{H^2-1}} + \frac{X-2H}{\sqrt{XY}} \arctan \sqrt{\frac{X(H-1)}{Y(H+1)}} - \arctan \sqrt{\frac{H-1}{H+1}} \right] \\
+        F_{d1-2} = \frac{L}{\pi H} \left[ \frac{1}{L} \arctan \frac{L}{\sqrt{H^2-1}} + \frac{X-2H}{\sqrt{XY}} \arctan
+        \sqrt{\frac{X(H-1)}{Y(H+1)}} - \arctan \sqrt{\frac{H-1}{H+1}} \right] \\
         \mathrm{where}~~L = \frac{l}{r}, ~~ H = \frac{h}{r}, \\
         X = (1+H)^2 + L^2, ~~ Y = (1-H)^2 + L^2
         \end{gather}
@@ -492,7 +524,8 @@
       </div>
       <div class="item">
         \begin{align}
-        F_{1-2} = &\frac{2}{\pi XY} \left\{ \ln \left[ \frac{(1+X^2)(1+Y^2)}{1+X^2+Y^2} \right]^{1/2} + X \sqrt{1+Y^2} \arctan \frac{X}{\sqrt{1+Y^2}} \right. \\
+        F_{1-2} = &\frac{2}{\pi XY} \left\{ \ln \left[ \frac{(1+X^2)(1+Y^2)}{1+X^2+Y^2} \right]^{1/2} + X \sqrt{1+Y^2}
+        \arctan \frac{X}{\sqrt{1+Y^2}} \right. \\
         &\left. + Y \sqrt{1+X^2} \arctan \frac{Y}{\sqrt{1+X^2}} - X \arctan X - Y \arctan Y \right\} \\
         &\hspace{70pt}\mathrm{where} ~~ X = \frac{a}{c}, ~~ Y = \frac{b}{c}
         \end{align}
@@ -541,8 +574,11 @@
       </div>
       <div class="item">
         \begin{align}
-        &F_{1-2} = \frac{1}{\pi W} \left( W \arctan \frac{1}{W} + H \arctan \frac{1}{H} - \sqrt{H^2 + W^2} \arctan \frac{1}{\sqrt{H^2 + W^2}} \right. \\
-        &\left. + \frac{1}{4} \ln \left\{ \frac{(1+W^2)(1+H^2)}{1+W^2+H^2} \left[ \frac{W^2(1+W^2+H^2)}{(1+W^2)(W^2+H^2)} \right]^{W^2} \left[ \frac{H^2(1+W^2+H^2)}{(1+H^2)(W^2+H^2)} \right]^{H^2} \right\} \right) \\
+        &F_{1-2} = \frac{1}{\pi W} \left( W \arctan \frac{1}{W} + H \arctan \frac{1}{H} - \sqrt{H^2 + W^2} \arctan
+        \frac{1}{\sqrt{H^2 + W^2}} \right. \\
+        &\left. + \frac{1}{4} \ln \left\{ \frac{(1+W^2)(1+H^2)}{1+W^2+H^2} \left[
+        \frac{W^2(1+W^2+H^2)}{(1+W^2)(W^2+H^2)} \right]^{W^2} \left[ \frac{H^2(1+W^2+H^2)}{(1+H^2)(W^2+H^2)}
+        \right]^{H^2} \right\} \right) \\
         &\hspace{110pt}\mathrm{where} ~~ H = \frac{h}{l}, ~~ W = \frac{w}{l}
         \end{align}
       </div>
@@ -733,8 +769,10 @@
       </div>
       <div class="item">
         \begin{align}
-        &F_{2-1} = \frac{1}{R} \left( 1 - \frac{H^2+R^2-1}{4H} - \frac{1}{\pi} \left\{ \arccos \frac{H^2-R^2+1}{H^2+R^2-1} \right. \right. \\
-        &\left. \left. - \frac{\sqrt{(H^2+R^2+1)^2-4R^2}}{2H} \arccos \frac{H^2-R^2+1}{R(H^2+R^2-1)} - \frac{H^2-R^2+1}{2H} \arcsin \frac{1}{R} \right\} \right) \\
+        &F_{2-1} = \frac{1}{R} \left( 1 - \frac{H^2+R^2-1}{4H} - \frac{1}{\pi} \left\{ \arccos
+        \frac{H^2-R^2+1}{H^2+R^2-1} \right. \right. \\
+        &\left. \left. - \frac{\sqrt{(H^2+R^2+1)^2-4R^2}}{2H} \arccos \frac{H^2-R^2+1}{R(H^2+R^2-1)} -
+        \frac{H^2-R^2+1}{2H} \arcsin \frac{1}{R} \right\} \right) \\
         &\hspace{50pt} \mathrm{where} ~~ R_1 = \frac{r_1}{h}, ~~R_2 = \frac{r_2}{h}, ~~A = R_2 + R_1, ~~B = R_2 - R_1
         \end{align}
       </div>
@@ -790,12 +828,15 @@
     </canvas>
   </div>
 
-  <script type="module" src="./bundle.js"></script>  
+  <script type="module" src="./bundle.js"></script>
 </body>
 
+<hr>
+
 <footer>
-  <a href="https://kanamesasaki.github.io/">Author's page</a> &#187;
-  <a href="index.html">View Factor Calculator</a>
-  <span style="float: right">Copyright 2022&#8211;2023, K. Sasaki</span>
+  <div style="text-align: right;">
+    <a href="https://thermocraft.space/" style="text-decoration: none; color: #808080;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">© 2022&#8211;2025 K. Sasaki</a>
+  </div>
 </footer>
+
 </html>

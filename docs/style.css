@@ -56,7 +56,7 @@ h3 {
 
 pre code {
     font-family: monospace;
-    background-color: #eee;
+    background-color: #ffffff;
     border: 1px solid #999;
     display: block;
     margin: 0 20px 0 20px;
@@ -90,12 +90,12 @@ img {
 }
 
 header {
-    background-color: #eee;
+    background-color: #ffffff;
     padding: 0.5em 20px 0.5em 20px;
 }
 
 footer {
-    background-color: #eee;
+    background-color: #ffffff;
     padding: 0.5em 20px 0.5em 20px;
 }
 
