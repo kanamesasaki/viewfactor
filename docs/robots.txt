@@ -1,11 +1,11 @@
 User-agent: *
 Allow: /
 
-# Allow all crawlers to access all content
-# This site contains view factor calculation tools and educational content
+# Temporary redirect notice - Site moved to new domain
+# Please update your bookmarks to: https://viewfactor.thermocraft.space/
 
-# Sitemap location (if you have one)
-Sitemap: https://viewfactor.thermocraft.space/sitemap.xml
+# New canonical location
+Canonical: https://viewfactor.thermocraft.space/
 
-# Common crawl delays (optional)
-Crawl-delay: 1
+# Reduced crawl frequency during transition
+Crawl-delay: 10
