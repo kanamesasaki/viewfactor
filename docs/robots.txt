@@ -2,10 +2,10 @@ User-agent: *
 Allow: /
 
 # Temporary redirect notice - Site moved to new domain
-# Please update your bookmarks to: https://viewfactor.thermocraft.space/
+# Please update your bookmarks to: https://sterad.org/
 
 # New canonical location
-Canonical: https://viewfactor.thermocraft.space/
+Canonical: https://sterad.org/
 
 # Reduced crawl frequency during transition
 Crawl-delay: 10
