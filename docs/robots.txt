@@ -2,10 +2,10 @@ User-agent: *
 Allow: /
 
 # Temporary redirect notice - Site moved to new domain
-# Please update your bookmarks to: https://sterad.org/
+# Please update your bookmarks to: https://sterad.net/
 
 # New canonical location
-Canonical: https://sterad.org/
+Canonical: https://sterad.net/
 
 # Reduced crawl frequency during transition
 Crawl-delay: 10
