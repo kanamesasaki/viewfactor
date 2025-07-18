@@ -5,7 +5,7 @@ Allow: /
 # This site contains view factor calculation tools and educational content
 
 # Sitemap location (if you have one)
-Sitemap: https://sterad.org/sitemap.xml
+Sitemap: https://sterad.net/sitemap.xml
 
 # Common crawl delays (optional)
 Crawl-delay: 1
