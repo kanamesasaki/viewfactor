@@ -55,7 +55,8 @@
     The Monte Carlo calculation uses WebGL 2.0. Depending on the browser and hardware configuration, this functionality
     might not work.
     The number of rays for the view factor calculation is 100,000. The seeds of the random number generator are fixed,
-    so the results are reproducible.
+    so the results are reproducible. For details on the random number generation implementation in this tool, see: 
+    <a href="https://thermocraft.space/articles/mrg32k3a/" target="_blank">"MRG32k3a Random Number Generator on WebGL2"</a>.
   </p>
 
   <h2>Differential surface to circular disk</h2>
@@ -102,6 +103,7 @@
         F_{d1-2} = 0, ~~
         \mathrm{where}~~\theta > \arctan \frac{r}{h} + \frac{\pi}{2}
         \end{gather}
+        <p><strong>Note:</strong> For detailed derivations and other configurations, see: <a href="https://thermocraft.space/articles/disk-viewfactor/" target="_blank">"Disk View Factor from a Plate Element"</a></p>
       </div>
     </div>
   </div>
